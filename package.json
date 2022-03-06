@@ -4,7 +4,8 @@
     "build": "snowpack build"
   },
   "dependencies": {
-    "svelte": "^3.46.4"
+    "svelte": "^3.46.4",
+    "svelte-preprocess": "^4.10.4"
   },
   "devDependencies": {
     "@snowpack/plugin-dotenv": "^2.2.0",

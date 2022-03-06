@@ -16,8 +16,10 @@
   }
 </style>
 
-<Sidebar></Sidebar>
-<Header></Header>
+<Sidebar />
+
+<Header />
 <main>
-  {#if $name == "Home"}<Home></Home>{/if}
+  {#if $name == "Home"}<Home/>
+  {:elif $name == "Characters"}<Characters/>{/if}
 </main>
