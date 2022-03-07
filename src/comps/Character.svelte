@@ -1,11 +1,12 @@
 <script lang="ts">
   import type { CharacterObj } from "src/_stores";
+  import type { Writable } from "svelte/store";
 
 
   export let char: string;
   export let ipa: string;
   export const index: number = 0;
-  export let charlist: CharacterObj[];
+  export let charlist: Writable<CharacterObj[]>;
   
 </script>
 <style lang="scss">
@@ -32,5 +33,5 @@
 <tr>
   <td><input type="text" bind:value={char} size="2"></td>
   <td><input type="text" bind:value={ipa} size="2"></td>
-  <td id="delete" on:click={() => charlist.splice(index, 1)}>&nbsp;<i class="fas fa-times"></i>&nbsp;</td>
+  <td id="delete" on:click={() => $charlist.splice(index, 1); charlis}>&nbsp;<i class="fas fa-times"></i>&nbsp;</td>
 </tr>

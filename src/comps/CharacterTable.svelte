@@ -1,9 +1,11 @@
 <script lang="ts">
   import {type CharacterObj} from "../_stores";
   import Character from "../comps/Character.svelte";
-  export let charlist: CharacterObj[] = [];
+  import type { Writable } from "svelte/store";
+
+  export let charlist: Writable<CharacterObj[]>;
   function addCharacter() {
-    charlist = [...charlist, {char: "", ipa: ""}];
+    $charlist = [...$charlist, {char: "", ipa: ""}];
   }
 </script>
 <style lang="scss">
@@ -13,7 +15,7 @@
 </style>
 <table>
   <tbody>
-    {#each charlist as character, i}
+    {#each $charlist as character, i}
       <Character {...character} index={i} charlist={charlist} />
     {/each}
   </tbody>
