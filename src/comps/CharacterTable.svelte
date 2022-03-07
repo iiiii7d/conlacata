@@ -9,9 +9,7 @@
   }
 </script>
 <style lang="scss">
-  table {
-    width: 30%;
-  }
+  
 </style>
 <table>
   <tbody>

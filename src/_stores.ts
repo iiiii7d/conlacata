@@ -1,7 +1,7 @@
-import { writable } from "svelte/store";
+import { readable, writable } from "svelte/store";
 
-export const name = writable("Home");
-export const version = writable("v0.0.0");
+export let name = writable("Home");
+export const version = readable("v0.0.0");
 
 export interface CharacterObj {
   char: string,
@@ -9,3 +9,13 @@ export interface CharacterObj {
 }
 
 export let characters = writable([] as CharacterObj[]);
+export let otherCharacters = writable([] as CharacterObj[]);
+/*export let shiftKey = writable(false);
+
+document.addEventListener("keydown", (e) => {
+  shiftKey.set(true);
+});
+document.addEventListener("keyup", (e) => {
+  shiftKey.set(false);
+});
+*/
