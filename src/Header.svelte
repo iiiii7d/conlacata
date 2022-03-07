@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {name} from "./_stores";
+  import {pageName} from "./_stores";
 </script>
 <style>
   header {
@@ -16,4 +16,4 @@
   }
 </style>
 
-<header><br><h1>{$name}</h1><br></header>
+<header><br><h1>{$pageName}</h1><br></header>

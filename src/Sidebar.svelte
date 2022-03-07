@@ -1,15 +1,16 @@
 <script lang="ts">
-  import {name} from "./_stores";
+  import {pageName} from "./_stores";
   
   const pages = {
     "Home": "door-open",
-    "Characters": "a"
+    "Characters": "a",
+    "Lexicon": "book"
   };
 
   var menuOpen = false;
 
   function loadPage(page: string) {
-    name.set(page);
+    pageName.set(page);
   }
 
 

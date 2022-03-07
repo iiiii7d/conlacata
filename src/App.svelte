@@ -3,7 +3,8 @@
   import Sidebar from "./Sidebar.svelte";
   import Home from "./pages/Home.svelte";
   import Characters from "./pages/Characters.svelte";
-  import { name } from "./_stores";
+  import { pageName } from "./_stores";
+  import Lexicon from "./pages/Lexicon.svelte";
 </script>
 <style>
   main {
@@ -11,17 +12,14 @@
     transform: translateX(50px);
     max-width: calc(100vw - 70px);
   }
-
-  /*main * {
-    max-width: calc(100vw - 70px);
-  }*/
 </style>
 
 <Sidebar />
 
 <Header />
 <main>
-  {#if $name == "Home"}<Home />
-  {:else if $name == "Characters"}<Characters />
+  {#if $pageName == "Home"}<Home />
+  {:else if $pageName == "Characters"}<Characters />
+  {:else if $pageName == "Lexicon"}<Lexicon />
   {/if}
 </main>
