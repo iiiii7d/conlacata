@@ -1,6 +1,6 @@
 <script lang="ts">
 
-  import { version } from "../stores";
+  import { version } from "../_stores";
 
 </script>
 

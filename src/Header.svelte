@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {name} from "./stores";
+  import {name} from "./_stores";
 </script>
 <style>
   header {

@@ -1,12 +1,10 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
-  import {name} from "./stores";
+  import {name} from "./_stores";
   
   const pages = {
     "Home": "door-open",
-    "a": "b"
+    "Characters": "a"
   };
-  const dispatch = createEventDispatcher();
 
   var menuOpen = false;
 
@@ -16,14 +14,15 @@
 
 
 </script>
-<style>
+<style lang="scss">
+  @import "./_global";
   nav {
     width: fit-content;
     min-width: 50px;
     height: 100vh;
     margin: 0;
     padding: 0;
-    background-color: #bbb;
+    background-color: $sidebar;
     display: block;
     float: left;
     text-align: center;
@@ -32,7 +31,7 @@
   }
   nav.selected {
     text-align: left;
-    box-shadow: 5px 0px 5px #aaa;
+    box-shadow: 5px 0px 5px $sidebar-shadow;
   }
   nav > div {
     margin: 0;
@@ -42,21 +41,16 @@
     display: inline-block;
   }
   nav > div:hover {
-    background-color: #999;
+    background-color: $sidebar-hover;
     cursor: pointer;
   }
   nav > div:active {
-    background-color: #777;
+    background-color: $sidebar-active;
   }
   nav > div > span {
     padding: 0px 0px 0px 10px;
     display: none;
-    -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      -khtml-user-select: none;
-        -moz-user-select: none;
-          -ms-user-select: none;
-              user-select: none;
+    @include unclickable;
   }
   nav.selected > div > span {
     display: inline-block;

@@ -2,7 +2,8 @@
   import Header from "./Header.svelte";
   import Sidebar from "./Sidebar.svelte";
   import Home from "./pages/Home.svelte";
-  import { name } from "./stores";
+  import Characters from "./pages/Characters.svelte";
+  import { name } from "./_stores";
 </script>
 <style>
   main {
@@ -11,15 +12,16 @@
     max-width: calc(100vw - 70px);
   }
 
-  main * {
+  /*main * {
     max-width: calc(100vw - 70px);
-  }
+  }*/
 </style>
 
 <Sidebar />
 
 <Header />
 <main>
-  {#if $name == "Home"}<Home/>
-  {:elif $name == "Characters"}<Characters/>{/if}
+  {#if $name == "Home"}<Home />
+  {:else if $name == "Characters"}<Characters />
+  {/if}
 </main>
