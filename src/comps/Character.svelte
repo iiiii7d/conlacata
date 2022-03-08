@@ -48,7 +48,7 @@
 
       
       &:hover {
-        background-color: rgb(255, 0, 0, 0.5);
+        background-color: #f008;
         cursor: pointer;
       }
       &:active {

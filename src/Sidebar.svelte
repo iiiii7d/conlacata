@@ -1,11 +1,16 @@
 <script lang="ts">
   import {pageName} from "./_stores";
   
-  const pages = {
+  const pages = [{
     "Home": "door-open",
+  },
+  {
     "Characters": "a",
     "Lexicon": "book"
-  };
+  },
+  {
+    "Parts of Speech": "message-dots"
+  }];
 
   var menuOpen = false;
 
@@ -63,7 +68,11 @@
 </style>
 <nav on:mouseleave={() => menuOpen = false} class:selected={menuOpen}>
   <div on:click={() => menuOpen = true}><i class="fas fa-bars"></i><span><b>Conlacata</b></span></div><br>
-  {#each Object.entries(pages) as [page, icon]}
-    <div on:click={() => loadPage(page)}><i class={"fas fa-"+icon}></i><span>{page}</span></div><br>
+  
+  {#each pages as subpages}
+    {#each Object.entries(subpages) as [page, icon]}
+      <div on:click={() => loadPage(page)}><i class={"fas fa-"+icon}></i><span>{page}</span></div><br>
+    {/each}
+    <hr>
   {/each}
 </nav>

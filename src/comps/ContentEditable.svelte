@@ -1,3 +1,9 @@
+
+<script lang="ts">
+  export let value: string = "";
+  export let placeholder: string = "";
+  export let placeholderColor: string = "grey";
+</script>
 <style lang="scss">
   [contenteditable] {
     &:hover {
@@ -15,12 +21,9 @@
     }
     &:empty::before {
       content: attr(placeholder);
-      color: grey;
+      color: var(--placeholderColor);
     }
   }
 </style>
-<script>
-  export let value;
-  export let placeholder;
-</script>
-<span contenteditable placeholder={placeholder} bind:innerHTML={value}></span> <i class="fas fa-pen"></i>
+<span contenteditable placeholder={placeholder} style={`--placeholderColor: ${placeholderColor}`}
+  bind:innerHTML={value}></span> <i class="fas fa-pen"></i>
