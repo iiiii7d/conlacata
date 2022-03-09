@@ -24,21 +24,12 @@ import Rule from "./Rule.svelte";
 
 </script>
 <style lang="scss">
+  @import "../global";
   h3 {
     margin-bottom: 0px;
     margin-top: 0px;
   }
-  div i.fas.fa-trash {
-    color: red;
-    padding: 2px;
-    &:hover {
-      background-color: #f008;
-    }
-    &:active {
-      opacity: 1;
-      color: white;
-    }
-  }
+  @include delete-button("div i.fas.fa-trash");
 </style>
 <div>
   {#if multiDimensional}

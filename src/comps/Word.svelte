@@ -15,6 +15,7 @@
 
 </script>
 <style lang="scss">
+  @import "../global";
   h2 {
     margin-bottom: 10px;
     margin-top: 0px;
@@ -27,17 +28,7 @@
       padding: 5px;
       float: left;
 
-      & > i.fas.fa-trash {
-        color: red;
-        padding: 2px;
-        &:hover {
-          background-color: #f008;
-        }
-        &:active {
-          opacity: 1;
-          color: white;
-        }
-      }
+      @include delete-button("& > i.fas.fa-trash");
     }
   }
 </style>

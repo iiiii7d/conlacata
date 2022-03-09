@@ -10,3 +10,30 @@ $sidebar-active: #777;
         -ms-user-select: none;
             user-select: none;
 }
+
+@mixin icon-button($selector, $col) {
+  #{$selector} {
+    color: $col;
+    text-align: center;
+    border-radius: 5px;
+    padding: 2px;
+    @include unclickable;
+
+    
+    &:hover {
+      background-color: rgba($col, .5);
+      cursor: pointer;
+    }
+    &:active {
+      background-color: $col;
+      opacity: 1;
+    }
+  }
+}
+
+@mixin delete-button($selector) {
+  @include icon-button($selector, #f00)
+}
+@mixin move-button($selector) {
+  @include icon-button($selector, #bbb)
+}

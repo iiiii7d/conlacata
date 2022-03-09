@@ -38,37 +38,8 @@
     width: 100%;
     display: inline;
 
-    &#delete {
-      color: red;
-      text-align: center;
-      border-radius: 5px;
-      @include unclickable;
-
-      
-      &:hover {
-        background-color: #f008;
-        cursor: pointer;
-      }
-      &:active {
-        background-color: red;
-        opacity: 1;
-      }
-    }
-    &#move {
-      color: #bbb;
-      text-align: center;
-      border-radius: 5px;
-      @include unclickable;
-
-      
-      &:hover {
-        background-color: #aaa;
-        cursor: pointer;
-      }
-      &:active {
-        background-color: #bbb;
-      }
-    }
+    @include delete-button("&#delete");
+    @include move-button("&#move");
   }
 </style>
 <tr>
