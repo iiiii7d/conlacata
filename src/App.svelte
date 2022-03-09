@@ -5,6 +5,7 @@
   import Characters from "./pages/Characters.svelte";
   import { pageName } from "./_stores";
   import Lexicon from "./pages/Lexicon.svelte";
+  import PartsOfSpeech from "./pages/PartsOfSpeech.svelte";
 </script>
 <style>
   main {
@@ -21,5 +22,6 @@
   {#if $pageName == "Home"}<Home />
   {:else if $pageName == "Characters"}<Characters />
   {:else if $pageName == "Lexicon"}<Lexicon />
+  {:else if $pageName == "Parts of Speech"}<PartsOfSpeech />
   {/if}
 </main>

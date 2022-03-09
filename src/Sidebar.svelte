@@ -9,7 +9,7 @@
     "Lexicon": "book"
   },
   {
-    "Parts of Speech": "message-dots"
+    "Parts of Speech": "comment-dots"
   }];
 
   var menuOpen = false;

@@ -18,4 +18,4 @@
     {/each}
   </tbody>
 </table>
-<button on:click={addCharacter}>Add character</button>
+<button on:click={addCharacter}><i class="fas fa-plus"></i> Add character</button>
