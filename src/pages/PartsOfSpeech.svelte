@@ -1,9 +1,14 @@
 <script lang="ts">
-  import { globalPOS, partsOfSpeech, type PartOfSpeechObj, type Conjugation} from "../_stores";
+  import {writable, type Writable} from "svelte/store";
+
+  import Conjugation from "../comps/Conjugation.svelte";
+  import { globalPOS, partsOfSpeech, type PartOfSpeechObj, type ConjugationObj} from "../_stores";
 
   let currentPOSIndex: number;
   let currentPOS: PartOfSpeechObj;
   $: currentPOS = $partsOfSpeech[currentPOSIndex] ?? $globalPOS;
+  let conjugations: Writable<ConjugationObj[]>;
+  $: conjugations = writable(currentPOS.conjugations);
 
   function addPOS() {
     $partsOfSpeech = [...$partsOfSpeech, {
@@ -23,8 +28,12 @@
     currentPOS.conjugations = [...currentPOS.conjugations, {
       name: "",
       description: "",
-      dimensional: true,
-      dimensions: []
+      multiDimensional: true,
+      dimensions: [{
+      name: "",
+      description: "",
+      rules: []
+    }]
     }]
   }
 </script>
@@ -42,7 +51,7 @@ Part of speech: <select bind:value={currentPOSIndex}>
   disabled={currentPOSIndex == -1} placeholder="Abbrev. " size="6">
 
 <h2>Conjugations</h2>
-<button on:click={addConj}><i class="fas fa-plus"></i> Add Conjugation</button>
-{#each currentPOS.conjugations as conj, conjIndex}
-  TODO
+<button on:click={addConj}><i class="fas fa-plus"></i> Add Conjugation</button><br>
+{#each $conjugations as conj, i}
+  <Conjugation {conj} conjList={conjugations} index={i}/>
 {/each}

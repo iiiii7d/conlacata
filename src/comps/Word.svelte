@@ -6,24 +6,11 @@
   export let lexicon: Writable<WordObj[]>;
   export let index: number;
 
-  export let conWord: string;
-  export let pronunciation: string;
-  export let fromWord: string;
-  export let description: string;
-  export let partOfSpeech: string;
-  let derivedWords: WordObj[] = [];
-  let tags: string[] = [];
-  let synonyms: string[] = [];
-  let antonyms: string[] = [];
+  export let word: WordObj;
 
   function deleteWord() {
     $lexicon.splice(index, 1);
     $lexicon = $lexicon;
-  }
-  
-  $: $lexicon[index] = {
-    conWord, pronunciation, fromWord, description,
-    partOfSpeech, derivedWords, tags, synonyms, antonyms
   }
 
 </script>
@@ -56,16 +43,16 @@
 </style>
 <div>
   <div>
-    <h2><ContentEditable placeholderColor="gray" placeholder={`Word in ${$conName}`} bind:value={conWord}/></h2>
-    <i><b>Pronunciaton:</b> <ContentEditable placeholder={"todo..."} bind:value={pronunciation}/></i><br>
-    <b>Translation:</b> <ContentEditable placeholder="Base language translation..." bind:value={fromWord} /><br>
-    <b>Part of speech:</b> <select bind:value={partOfSpeech}>
+    <h2><ContentEditable placeholderColor="gray" placeholder={`Word in ${$conName}`} bind:value={word.conWord}/></h2>
+    <i><b>Pronunciaton:</b> <ContentEditable placeholder={"todo..."} bind:value={word.pronunciation}/></i><br>
+    <b>Direct translation:</b> <ContentEditable placeholder="Base language translation..." bind:value={word.fromWord} /><br>
+    <b>Part of speech:</b> <select bind:value={word.partOfSpeech}>
       <option value="">None</option>
       {#each $partsOfSpeech as pos}
         <option value={pos.name}>{pos.name}</option>
       {/each}
     </select><br><br>
-    <b>Description:</b> <ContentEditable placeholder="Description" bind:value={description} /><br>
+    <b>Description:</b> <ContentEditable placeholder="Description" bind:value={word.description} /><br>
   </div>
   <div>
     TODO conjugation table

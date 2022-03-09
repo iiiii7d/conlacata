@@ -24,6 +24,6 @@
 <div>
   <button on:click={addWord}><i class="fas fa-plus"></i> Add word</button><br>
   {#each $lexicon as word, i}
-    <Word {...word} index={i} lexicon={lexicon}/>
+    <Word {word} index={i} lexicon={lexicon}/>
   {/each}
 </div>

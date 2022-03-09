@@ -29,18 +29,22 @@ export interface PartOfSpeechObj {
   name: string,
   description: string,
   abbrev: string,
-  conjugations: Conjugation[]
+  conjugations: ConjugationObj[]
 }
-export interface Conjugation {
+export interface ConjugationObj {
   name: string,
   description: string,
-  dimensional: boolean,
-  dimensions: Dimension[],
+  multiDimensional: boolean,
+  dimensions: DimensionObj[],
 }
-export interface Dimension {
+export interface DimensionObj {
   name: string,
   description: string,
-  rules: Map<RegExp, RegExp>,
+  rules: RuleObj[],
+}
+export interface RuleObj {
+  regex: RegExp,
+  subst: string
 }
 
 export let lexicon = writable([] as WordObj[]);

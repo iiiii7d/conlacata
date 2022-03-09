@@ -3,12 +3,10 @@
   import type { Writable } from "svelte/store";
 
 
-  export let char: string;
-  export let ipa: string;
   export let index: number;
+  export let character: CharacterObj;
   export let charlist: Writable<CharacterObj[]>;
-  $: $charlist[index] = {char, ipa};
-
+  
   function deleteChar() {
     $charlist.splice(index, 1);
     $charlist = $charlist;
@@ -74,8 +72,10 @@
   }
 </style>
 <tr>
-  <td><input type="text" bind:value={char} size="3" placeholder="char"></td>
-  <td><input type="text" bind:value={ipa} size="3" placeholder="ipa"></td>
+  <td><input type="text" bind:value={character.char} size="3"
+    on:change={() => $charlist = $charlist} placeholder="char"></td>
+  <td><input type="text" bind:value={character.ipa} size="3"
+    on:change={() => $charlist = $charlist} placeholder="ipa"></td>
   <td id="move" on:click={moveUpChar}>&nbsp;<i class="fas fa-chevron-up"></i>&nbsp;</td>
   <td id="move" on:click={moveDownChar}>&nbsp;<i class="fas fa-chevron-down"></i>&nbsp;</td>
   <td id="delete" on:click={deleteChar}>&nbsp;<i class="fas fa-times"></i>&nbsp;</td>

@@ -3,6 +3,7 @@
   export let value: string = "";
   export let placeholder: string = "";
   export let placeholderColor: string = "grey";
+  export let disabled: boolean = false;
 </script>
 <style lang="scss">
   [contenteditable] {
@@ -25,5 +26,9 @@
     }
   }
 </style>
-<span contenteditable placeholder={placeholder} style={`--placeholderColor: ${placeholderColor}`}
+{#if disabled}
+  <span>{value || placeholder}</span>
+{:else}
+  <span contenteditable {placeholder} style={`--placeholderColor: ${placeholderColor}`}
   bind:innerHTML={value}></span> <i class="fas fa-pen"></i>
+{/if}

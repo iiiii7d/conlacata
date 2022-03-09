@@ -14,7 +14,7 @@
 <table>
   <tbody>
     {#each $charlist as character, i}
-      <Character {...character} index={i} charlist={charlist} />
+      <Character {character} {charlist} index={i}/>
     {/each}
   </tbody>
 </table>
