@@ -8,7 +8,7 @@
       fromWord: "",
       description: "",
       pronunciation: "",
-      partOfSpeech: "",
+      partOfSpeech: undefined,
       derivedWords: [],
       tags: [],
       synonyms: [],

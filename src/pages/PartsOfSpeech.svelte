@@ -15,7 +15,8 @@
       name: "",
       description: "",
       abbrev: "",
-      conjugations: []
+      conjugations: [],
+      conjTableView: {},
     }];
     currentPOSIndex = $partsOfSpeech.length-1;
   }

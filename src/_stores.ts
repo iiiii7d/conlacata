@@ -18,7 +18,7 @@ export interface WordObj {
   fromWord: string,
   description: string,
   pronunciation: string,
-  partOfSpeech: string,
+  partOfSpeech?: PartOfSpeechObj,
   derivedWords: WordObj[],
   tags: string[],
   synonyms: string[],
@@ -30,6 +30,7 @@ export interface PartOfSpeechObj {
   description: string,
   abbrev: string,
   conjugations: ConjugationObj[]
+  conjTableView: ConjTableViewObj,
 }
 export interface ConjugationObj {
   name: string,
@@ -54,8 +55,14 @@ export let globalPOS: Writable<PartOfSpeechObj> = writable({
   name: "",
   description: "",
   abbrev: "",
-  conjugations: []
+  conjugations: [],
+  conjTableView: {},
 });
+export interface ConjTableViewObj {
+  x?: ConjugationObj,
+  y?: ConjugationObj,
+  z?: ConjugationObj
+}
 /*export let shiftKey = writable(false);
 
 document.addEventListener("keydown", (e) => {
