@@ -41,11 +41,13 @@ import Rule from "./Rule.svelte";
   }
 </style>
 <div>
-  <h3><ContentEditable placeholder={!multiDimensional ? "("+conjugationName+")"
-    : index == 0 ? "(Default)" : "name"} disabled={!multiDimensional} bind:value={dimension.name} />
-  <i class="fas fa-trash" on:click={deleteDimension}></i></h3>
-  {#if multiDimensional && index != 0}
-    <ContentEditable placeholder="description" bind:value={dimension.description} /><br>
+  {#if multiDimensional}
+    <h3><ContentEditable placeholder={index == 0 ? "(Default)" : "name"}
+      disabled={!multiDimensional} bind:value={dimension.name} />
+    <i class="fas fa-trash" on:click={deleteDimension}></i></h3>
+    {#if index != 0}
+      <ContentEditable placeholder="description" bind:value={dimension.description} /><br>
+    {/if}
   {/if}
   {#each $rules as rule, i}
     <Rule {rule} {rules} index={i}/>

@@ -37,6 +37,7 @@
     color: red;
   }
 </style>
-<input type="text" bind:value={preRegex} class:error={regexError} size="5"> >>
+<input type="text" bind:value={preRegex} class:error={regexError} size="5">
+<i class="fas fa-chevron-right"></i>
 <input type="text" bind:value={rule.subst} size="5">
 <i class="fas fa-trash" on:click={deleteRule}></i><br>

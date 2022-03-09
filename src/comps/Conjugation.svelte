@@ -62,9 +62,14 @@
       <i class="fas fa-plus"></i> Add Dimension</button><br>
   </div>
   <div><i class="fas fa-trash" on:click={deleteConj}></i></div>
-  {#each $dimensions as dimension, i}
-    <div><Dimension {dimension} {dimensions} multiDimensional={conj.multiDimensional}
-      conjugationName={conj.name} index={i}/></div>
-  {/each}
+  {#if conj.multiDimensional}
+    {#each $dimensions as dimension, i}
+      <div><Dimension {dimension} {dimensions} multiDimensional={conj.multiDimensional}
+        conjugationName={conj.name} index={i}/></div>
+    {/each}
+  {:else}
+    <div><Dimension dimension={$dimensions[0]} {dimensions} multiDimensional={conj.multiDimensional}
+      conjugationName={conj.name} index={0}/></div>
+  {/if}
 </div><br>
 <hr>
