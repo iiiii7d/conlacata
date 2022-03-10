@@ -7,15 +7,15 @@
   export let rules: Writable<RuleObj[]>;
   export let index: number;
   let regexError: boolean
-  let preRegex = rule.regex.toString().slice(1, rule.regex.toString().length-1);
-  $: try {
+  let preRegex = rule.regex;
+  function checkRegex() { try {
     new RegExp(preRegex);
     rule.regex = preRegex;
     regexError = false;
   }
   catch (SyntaxError) {
     regexError = true;
-  }
+  } }
 
   function deleteRule() {
     $rules.splice(index, 1);
@@ -29,7 +29,7 @@
     color: red;
   }
 </style>
-<input type="text" bind:value={preRegex} class:error={regexError} size="5">
+<input type="text" bind:value={preRegex} on:keyup={checkRegex} class:error={regexError} size="5">
 <i class="fas fa-chevron-right"></i>
 <input type="text" bind:value={rule.subst} size="5">
 <i class="fas fa-trash" on:click={deleteRule}></i><br>

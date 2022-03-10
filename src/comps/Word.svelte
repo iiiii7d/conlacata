@@ -24,7 +24,9 @@
     partsOfSpeech, type CharacterObj, type WordObj} from "../_stores";
   import type { Writable } from "svelte/store";
   import ConjugationTable from "./ConjugationTable.svelte";
+
   $: charlist = $otherCharacters.concat($characters)
+  $: console.log(word);
 
   export let lexicon: Writable<WordObj[]>;
   export let index: number;
@@ -64,7 +66,7 @@
     <h2><ContentEditable placeholderColor="gray" placeholder={`Word in ${$conName}`} bind:value={word.conWord}/></h2>
     <i><b>Pronunciaton:</b> <ContentEditable placeholder={getIPA(word.conWord, charlist)} bind:value={word.pronunciation}/></i><br>
     <b>Direct translation:</b> <ContentEditable placeholder="Base language translation..." bind:value={word.fromWord} /><br>
-    <b>Part of speech:</b> <select bind:value={word.partOfSpeech}>
+    <b>Part of speech:</b> <select bind:value={word.partOfSpeech} on:change={() => $lexicon[index] = word}>
       <option value={undefined}>None</option>
       {#each $partsOfSpeech as pos}
         <option value={pos}>{pos.name}</option>

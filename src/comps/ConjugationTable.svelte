@@ -11,13 +11,15 @@
   
 
   let charlist = $otherCharacters.concat($characters)
-  let conjugations = partOfSpeech ? partOfSpeech?.conjugations.concat($globalPOS.conjugations) : $globalPOS.conjugations;
+  let conjugations = partOfSpeech ? partOfSpeech?.conjugations?.concat($globalPOS.conjugations) : $globalPOS.conjugations;
   let conjTableView = partOfSpeech ? partOfSpeech?.conjTableView : {};
+  console.log(partOfSpeech);
   $: xDims = getDims("x", conjTableView);
   $: yDims = getDims("y", conjTableView);
   $: zDims = getDims("z", conjTableView);
 
   function getDims(axis: "x" | "y" | "z", conjTableView: ConjTableViewObj | undefined): DimensionObj[] {
+    console.log(conjTableView)
     if (conjTableView === undefined) return [defaultDim];
     if (conjTableView[axis] === undefined) return [defaultDim];
     if (!conjTableView[axis]?.multiDimensional) {
