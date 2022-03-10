@@ -1,6 +1,13 @@
+<script lang="ts" context="module">
+  function getIPA(word: string, charlist: CharacterObj[]) {
+    for (let char of charlist) {
+
+    }
+  }
+</script>
 <script lang="ts">
   import ContentEditable from "./ContentEditable.svelte";
-  import {conName, partsOfSpeech, type WordObj} from "../_stores";
+  import {conName, partsOfSpeech, type CharacterObj, type WordObj} from "../_stores";
   import type { Writable } from "svelte/store";
   import ConjugationTable from "./ConjugationTable.svelte";
 
