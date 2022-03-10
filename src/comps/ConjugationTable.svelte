@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { characters, defaultDimension, globalPOS, otherCharacters, partsOfSpeech, type ConjTableViewObj, type DimensionObj, type PartOfSpeechObj } from "../_stores";
+  import { characters, defaultDimension, globalPOS, otherCharacters,
+    partsOfSpeech, type ConjTableViewObj, type ConjugationObj, type DimensionObj, type PartOfSpeechObj } from "../_stores";
   import ConjugationTableAxisSelector from "./ConjugationTableAxisSelector.svelte";
   import {getIPA} from "./Word.svelte";
 
@@ -39,8 +40,9 @@
     }
   }
   
-  function applyConjugation(value: string, ...dims: DimensionObj[]) {
-    for (let dim of dims) {
+  function applyConjugation(value: string, ...dims: [DimensionObj, ConjugationObj | undefined][]) {
+    for (let [dim, _] of dims.sort(([_1, ac], [_2, bc]) =>
+      partOfSpeech?.conjugations.indexOf(ac!)! - partOfSpeech?.conjugations.indexOf(bc!)!)) {
       for (let rule of dim.rules) {
         value = value.replace(new RegExp(rule.regex, "g"), rule.subst);
       }
@@ -80,25 +82,35 @@
   axis="z" {conjugations}/>
 {#each zDims as dimz, z}
   <table>
-    <caption class="axis-name">{dimz.name || (z == 0 ? "(Default)" : "unnamed")}</caption>
+    <caption class="axis-name">{dimz.name || (z == 0 ? "(Default)"
+      : conjTableView.z?.multiDimensional ? "unnamed" : conjTableView.z?.name)}</caption>
     <tbody>
       <tr>
         <th></th>
         {#each xDims as dimx, x}
-          <th class="axis-name">{dimx.name || (x == 0 ? "(Default)" : "unnamed")}</th>
+          <th class="axis-name">{dimx.name || (x == 0 ? "(Default)"
+            : conjTableView.x?.multiDimensional ? "unnamed" : conjTableView.x?.name)}</th>
         {:else}
           <th class="axis-name">(Default)</th>
         {/each}
       </tr>
         {#each yDims as dimy, y}
           <tr>
-            <th class="axis-name">{dimy.name || (y == 0 ? "(Default)" : "unnamed")}</th>
+            <th class="axis-name">{dimy.name || (y == 0 ? "(Default)"
+              : conjTableView.y?.multiDimensional ? "unnamed" : conjTableView.y?.name)}</th>
             {#each xDims as dimx}
-              {@const conj = applyConjugation(word, dimx, dimy, dimz)}
+              {@const conj = applyConjugation(word,
+                [dimx, conjTableView.x],
+                [dimy, conjTableView.y],
+                [dimz, conjTableView.z])}
               <td>{conj}<br><i class="conj-ipa">{getIPA(conj, charlist)}</i></td>
             {:else}
-              <td>{applyConjugation(word, dimy, dimz)}<br>
-                <i class="conj-ipa">{getIPA(applyConjugation(word, dimy, dimz), charlist)}</i></td>
+              <td>{applyConjugation(word,
+                [dimy, conjTableView.y],
+                [dimz, conjTableView.z])}<br>
+                <i class="conj-ipa">{getIPA(applyConjugation(word,
+                  [dimy, conjTableView.y],
+                  [dimz, conjTableView.z]), charlist)}</i></td>
             {/each}
           </tr>
         {/each}
