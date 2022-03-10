@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ConjTableViewObj, ConjugationObj } from "src/_stores";
+  import type { ConjTableViewObj, ConjugationObj } from "../_stores";
 
 
   export let value: ConjugationObj | undefined;

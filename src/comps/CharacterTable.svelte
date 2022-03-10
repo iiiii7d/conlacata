@@ -1,11 +1,11 @@
 <script lang="ts">
-  import {type CharacterObj} from "../_stores";
+  import {type CharacterObj, defaultCharacter} from "../_stores";
   import Character from "../comps/Character.svelte";
   import type { Writable } from "svelte/store";
 
   export let charlist: Writable<CharacterObj[]>;
   function addCharacter() {
-    $charlist = [...$charlist, {char: "", ipa: ""}];
+    $charlist = [...$charlist, defaultCharacter()];
   }
 </script>
 <style lang="scss">

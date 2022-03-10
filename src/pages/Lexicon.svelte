@@ -1,19 +1,9 @@
 <script lang="ts">
   import Word from "../comps/Word.svelte";
-  import {lexicon} from "../_stores";
+  import {defaultWord, lexicon} from "../_stores";
 
   function addWord() {
-    $lexicon = [...$lexicon, {
-      conWord: "",
-      fromWord: "",
-      description: "",
-      pronunciation: "",
-      partOfSpeech: undefined,
-      derivedWords: [],
-      tags: [],
-      synonyms: [],
-      antonyms: []
-    }]
+    $lexicon = [...$lexicon, defaultWord()]
   }
 </script>
 <style lang="scss">

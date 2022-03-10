@@ -2,7 +2,7 @@
   import {writable, type Writable} from "svelte/store";
 
   import Conjugation from "../comps/Conjugation.svelte";
-  import { globalPOS, partsOfSpeech, type PartOfSpeechObj, type ConjugationObj} from "../_stores";
+  import { globalPOS, partsOfSpeech, type PartOfSpeechObj, type ConjugationObj, defaultPartOfSpeech, defaultConjugation} from "../_stores";
 
   let currentPOSIndex: number;
   let currentPOS: PartOfSpeechObj;
@@ -11,13 +11,7 @@
   $: conjugations = writable(currentPOS.conjugations);
 
   function addPOS() {
-    $partsOfSpeech = [...$partsOfSpeech, {
-      name: "",
-      description: "",
-      abbrev: "",
-      conjugations: [],
-      conjTableView: {},
-    }];
+    $partsOfSpeech = [...$partsOfSpeech, defaultPartOfSpeech()];
     currentPOSIndex = $partsOfSpeech.length-1;
   }
   function deletePOS() {
@@ -26,16 +20,7 @@
     currentPOSIndex -= 1;
   }
   function addConj() {
-    currentPOS.conjugations = [...currentPOS.conjugations, {
-      name: "",
-      description: "",
-      multiDimensional: true,
-      dimensions: [{
-      name: "",
-      description: "",
-      rules: []
-    }]
-    }]
+    currentPOS.conjugations = [...currentPOS.conjugations, defaultConjugation()]
   }
 </script>
 Part of speech: <select bind:value={currentPOSIndex}>

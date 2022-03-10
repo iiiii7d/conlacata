@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ConjugationObj, DimensionObj } from "src/_stores";
+  import { defaultDimension, type ConjugationObj, type DimensionObj } from "../_stores";
   import { writable, type Writable } from "svelte/store";
   import ContentEditable from "./ContentEditable.svelte";
   import Dimension from "./Dimension.svelte";
@@ -16,11 +16,7 @@
   }
 
   function addDimension() {
-    conj.dimensions = [...conj.dimensions, {
-      name: "",
-      description: "",
-      rules: []
-    }]
+    conj.dimensions = [...conj.dimensions, defaultDimension()]
   }
 
 </script>

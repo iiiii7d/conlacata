@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { DimensionObj, RuleObj } from "src/_stores";
+  import { defaultRule, type DimensionObj, type RuleObj } from "../_stores";
   import { writable, type Writable } from "svelte/store";
   import ContentEditable from "./ContentEditable.svelte";
-import Rule from "./Rule.svelte";
+  import Rule from "./Rule.svelte";
 
   export let dimension: DimensionObj;
   export let index: number;
@@ -19,7 +19,7 @@ import Rule from "./Rule.svelte";
   }
 
   function addRule() {
-    dimension.rules = [...dimension.rules, {regex: new RegExp(""), subst: ""}];
+    dimension.rules = [...dimension.rules, defaultRule()];
   }
 
 </script>

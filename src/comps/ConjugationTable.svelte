@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { globalPOS, type DimensionObj, type PartOfSpeechObj } from "../_stores";
+  import { defaultDimension, globalPOS, type DimensionObj, type PartOfSpeechObj } from "../_stores";
   import ConjugationTableAxisSelector from "./ConjugationTableAxisSelector.svelte";
 
 
   export let partOfSpeech: PartOfSpeechObj | undefined;
   export let word: string;
-  let defaultDim = {name: "(Default)", description: "", rules: []}
+  let defaultDim = defaultDimension();
+  defaultDim.name = "(Default)";
   
   function getDims(axis: "x" | "y" | "z", pos: PartOfSpeechObj | undefined): DimensionObj[] {
     if (pos == undefined) return [defaultDim];
