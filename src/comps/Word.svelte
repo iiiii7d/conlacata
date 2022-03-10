@@ -53,7 +53,7 @@
   <div>
     <details>
       <summary>Conjugation table</summary>
-      <ConjugationTable />
+      <ConjugationTable partOfSpeech={word.partOfSpeech} word={word.conWord}/>
     </details>
   </div>
   <div><i class="fas fa-trash" on:click={deleteWord}></i></div>
