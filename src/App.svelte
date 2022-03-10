@@ -8,6 +8,7 @@
   import Lexicon from "./pages/Lexicon.svelte";
   import PartsOfSpeech from "./pages/PartsOfSpeech.svelte";
   import LZString from "lz-string";
+  import Settings from "./pages/Settings.svelte";
 
   $: {
     let saved: localStorageFormat = {
@@ -43,5 +44,6 @@
   {:else if $pageName == "Characters"}<Characters />
   {:else if $pageName == "Lexicon"}<Lexicon />
   {:else if $pageName == "Parts of Speech"}<PartsOfSpeech />
+  {:else if $pageName == "Settings"}<Settings />
   {/if}
 </main>

@@ -9,7 +9,8 @@
   let regexError: boolean
   let preRegex = rule.regex.toString().slice(1, rule.regex.toString().length-1);
   $: try {
-    rule.regex = new RegExp(preRegex);
+    new RegExp(preRegex);
+    rule.regex = preRegex;
     regexError = false;
   }
   catch (SyntaxError) {

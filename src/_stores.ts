@@ -112,11 +112,11 @@ export const defaultDimension = (): DimensionObj => ({...{
   rules: []
 }})
 export interface RuleObj {
-  regex: RegExp,
+  regex: string,
   subst: string
 }
 export const defaultRule = (): RuleObj => ({...{
-  regex: new RegExp(""),
+  regex: "(?:)",
   subst: ""
 }})
 export interface ConjTableViewObj {
@@ -135,25 +135,32 @@ document.addEventListener("keyup", (e) => {
 */
 
 let loadedLocalStorage: localStorageFormat = JSON.parse(
-    LZString.decompress(localStorage.conlacata ?? LZString.compress(JSON.stringify(defaultLocalStorageFormat())))
+    LZString.decompress(localStorage.conlacata
+      ?? LZString.compress(JSON.stringify(defaultLocalStorageFormat())))
    ?? JSON.stringify(defaultLocalStorageFormat()));
 // @ts-ignore
 if (loadedLocalStorage == {}) loadedLocalStorage = defaultLocalStorageFormat();
 
-export let pageName = writable(loadedLocalStorage.pageName);
+export let pageName = writable(loadedLocalStorage.pageName
+  ?? defaultLocalStorageFormat().pageName);
 export const version = readable("v0.0.0");
 
-export let conName = writable(loadedLocalStorage.conName);
+export let conName = writable(loadedLocalStorage.conName
+  ?? defaultLocalStorageFormat().conName);
 
-export let characters = writable(loadedLocalStorage.characters);
-export let otherCharacters = writable(loadedLocalStorage.otherCharacters);
+export let characters = writable(loadedLocalStorage.characters
+  ?? defaultLocalStorageFormat().characters);
+export let otherCharacters = writable(loadedLocalStorage.otherCharacters
+  ?? defaultLocalStorageFormat().otherCharacters);
 
-export let lexicon = writable(loadedLocalStorage.lexicon.map(w => {
+export let lexicon = writable(loadedLocalStorage.lexicon?.map(w => {
   if (w.partOfSpeech !== undefined)
     (w as WordObj).partOfSpeech = loadedLocalStorage.partsOfSpeech
       .filter(pos => pos.name == w.partOfSpeech)[0];
   return w as WordObj
-}));
+}) ?? defaultLocalStorageFormat().lexicon);
 
-export let partsOfSpeech = writable(loadedLocalStorage.partsOfSpeech);
-export let globalPOS: Writable<PartOfSpeechObj> = writable(loadedLocalStorage.globalPOS);
+export let partsOfSpeech = writable(loadedLocalStorage.partsOfSpeech
+  ?? defaultLocalStorageFormat().partsOfSpeech);
+export let globalPOS: Writable<PartOfSpeechObj> = writable(loadedLocalStorage.globalPOS
+  ?? defaultLocalStorageFormat().globalPOS);

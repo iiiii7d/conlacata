@@ -1,15 +1,30 @@
 <script lang="ts" context="module">
-  function getIPA(word: string, charlist: CharacterObj[]) {
-    for (let char of charlist) {
-
+  export function getIPA(word: string, charlist: CharacterObj[]): string {
+    let ipa = "";
+    if (!word) return "(None)";
+    outer: while (true) {
+      for (let char of charlist) {
+        if (char.char && word.startsWith(char.char)) {
+          ipa += char.ipa;
+          word = word.slice(char.char.length);
+          if (!word) break outer;
+          continue outer;
+        }
+      }
+      if (!word) break outer;
+      ipa += word[0];
+      word = word.slice(1);
     }
+    return ipa || "(None)";
   }
 </script>
 <script lang="ts">
   import ContentEditable from "./ContentEditable.svelte";
-  import {conName, partsOfSpeech, type CharacterObj, type WordObj} from "../_stores";
+  import {conName, otherCharacters, characters,
+    partsOfSpeech, type CharacterObj, type WordObj} from "../_stores";
   import type { Writable } from "svelte/store";
   import ConjugationTable from "./ConjugationTable.svelte";
+  $: charlist = $otherCharacters.concat($characters)
 
   export let lexicon: Writable<WordObj[]>;
   export let index: number;
@@ -47,7 +62,7 @@
 <div>
   <div>
     <h2><ContentEditable placeholderColor="gray" placeholder={`Word in ${$conName}`} bind:value={word.conWord}/></h2>
-    <i><b>Pronunciaton:</b> <ContentEditable placeholder={"todo..."} bind:value={word.pronunciation}/></i><br>
+    <i><b>Pronunciaton:</b> <ContentEditable placeholder={getIPA(word.conWord, charlist)} bind:value={word.pronunciation}/></i><br>
     <b>Direct translation:</b> <ContentEditable placeholder="Base language translation..." bind:value={word.fromWord} /><br>
     <b>Part of speech:</b> <select bind:value={word.partOfSpeech}>
       <option value={undefined}>None</option>

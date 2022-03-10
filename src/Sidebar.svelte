@@ -10,6 +10,9 @@
   },
   {
     "Parts of Speech": "comment-dots"
+  },
+  {
+    "Settings": "gear"
   }];
 
   var menuOpen = false;

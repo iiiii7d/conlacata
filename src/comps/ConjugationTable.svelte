@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { defaultDimension, globalPOS, type DimensionObj, type PartOfSpeechObj } from "../_stores";
+  import { characters, defaultDimension, globalPOS, otherCharacters, type ConjTableViewObj, type DimensionObj, type PartOfSpeechObj } from "../_stores";
   import ConjugationTableAxisSelector from "./ConjugationTableAxisSelector.svelte";
+  import {getIPA} from "./Word.svelte";
 
 
   export let partOfSpeech: PartOfSpeechObj | undefined;
@@ -8,30 +9,35 @@
   let defaultDim = defaultDimension();
   defaultDim.name = "(Default)";
   
-  function getDims(axis: "x" | "y" | "z", pos: PartOfSpeechObj | undefined): DimensionObj[] {
-    if (pos == undefined) return [defaultDim];
-    if (pos.conjTableView[axis] === undefined) return [defaultDim];
-    if (!pos?.conjTableView[axis]?.multiDimensional) {
-      if (pos?.conjTableView[axis]?.dimensions[0])
+
+  let charlist = $otherCharacters.concat($characters)
+  let conjugations = partOfSpeech ? partOfSpeech?.conjugations.concat($globalPOS.conjugations) : $globalPOS.conjugations;
+  let conjTableView = partOfSpeech ? partOfSpeech?.conjTableView : {};
+  $: xDims = getDims("x", conjTableView);
+  $: yDims = getDims("y", conjTableView);
+  $: zDims = getDims("z", conjTableView);
+
+  function getDims(axis: "x" | "y" | "z", conjTableView: ConjTableViewObj | undefined): DimensionObj[] {
+    if (conjTableView === undefined) return [defaultDim];
+    if (conjTableView[axis] === undefined) return [defaultDim];
+    if (!conjTableView[axis]?.multiDimensional) {
+      if (conjTableView[axis]?.dimensions[0])
       return [
         defaultDim,
-        pos?.conjTableView[axis]?.dimensions[0] as DimensionObj
+        conjTableView[axis]?.dimensions[0] as DimensionObj
       ]
       else return [
         defaultDim
       ]
     } else {
-      return pos?.conjTableView[axis]?.dimensions ?? [defaultDim]
+      return conjTableView[axis]?.dimensions ?? [defaultDim]
     }
   }
-  $: xDims = getDims("x", partOfSpeech);
-  $: yDims = getDims("y", partOfSpeech);
-  $: zDims = getDims("z", partOfSpeech);
   
   function applyConjugation(value: string, ...dims: DimensionObj[]) {
     for (let dim of dims) {
       for (let rule of dim.rules) {
-        value = value.replace(rule.regex, rule.subst);
+        value = value.replace(new RegExp(rule.regex, "g"), rule.subst);
       }
     }
     return value;
@@ -42,17 +48,31 @@
     font-weight: bolder;
     text-decoration: underline;
   }
+  table {
+    border-collapse: collapse;
+    border-style: hidden;
+  }
+
+  table td, table th {
+      border: 1px solid #aaa;
+  }
+  caption {
+    border-bottom: 1px solid #aaa;
+  }
+  i.conj-ipa {
+    color: #aaa;
+  }
 </style>
-{#if partOfSpeech === undefined}
+{#if conjugations === undefined}
   <i>No conjugations</i>
 {:else}
 
-<ConjugationTableAxisSelector bind:value={partOfSpeech.conjTableView.x}
-  axis="x" conjugations={partOfSpeech.conjugations.concat($globalPOS.conjugations)}/><br>
-<ConjugationTableAxisSelector bind:value={partOfSpeech.conjTableView.y}
-  axis="y" conjugations={partOfSpeech.conjugations.concat($globalPOS.conjugations)}/><br>
-<ConjugationTableAxisSelector bind:value={partOfSpeech.conjTableView.z}
-  axis="z" conjugations={partOfSpeech.conjugations.concat($globalPOS.conjugations)}/>
+<ConjugationTableAxisSelector bind:value={conjTableView.x}
+  axis="x" {conjugations}/><br>
+<ConjugationTableAxisSelector bind:value={conjTableView.y}
+  axis="y" {conjugations}/><br>
+<ConjugationTableAxisSelector bind:value={conjTableView.z}
+  axis="z" {conjugations}/>
 {#each zDims as dimz, z}
   <table>
     <caption class="axis-name">{dimz.name || (z == 0 ? "(Default)" : "unnamed")}</caption>
@@ -69,9 +89,11 @@
           <tr>
             <th class="axis-name">{dimy.name || (y == 0 ? "(Default)" : "unnamed")}</th>
             {#each xDims as dimx}
-              <td>{applyConjugation(word, dimx, dimy, dimz)}</td>
+              {@const conj = applyConjugation(word, dimx, dimy, dimz)}
+              <td>{conj}<br><i class="conj-ipa">{getIPA(conj, charlist)}</i></td>
             {:else}
-              <td>{applyConjugation(word, dimy, dimz)}</td>
+              <td>{applyConjugation(word, dimy, dimz)}<br>
+                <i class="conj-ipa">{getIPA(applyConjugation(word, dimy, dimz), charlist)}</i></td>
             {/each}
           </tr>
         {/each}
