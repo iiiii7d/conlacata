@@ -133,9 +133,10 @@ document.addEventListener("keyup", (e) => {
   shiftKey.set(false);
 });
 */
+
 let loadedLocalStorage: localStorageFormat = JSON.parse(
-  LZString.decompress(localStorage.conlacata ?? LZString.compress("{}"))
-   ?? "{}");
+    LZString.decompress(localStorage.conlacata ?? LZString.compress(JSON.stringify(defaultLocalStorageFormat())))
+   ?? JSON.stringify(defaultLocalStorageFormat()));
 // @ts-ignore
 if (loadedLocalStorage == {}) loadedLocalStorage = defaultLocalStorageFormat();
 
@@ -147,9 +148,11 @@ export let conName = writable(loadedLocalStorage.conName);
 export let characters = writable(loadedLocalStorage.characters);
 export let otherCharacters = writable(loadedLocalStorage.otherCharacters);
 
-export let lexicon = writable(loadedLocalStorage.lexicon.map((w): WordObj => {
-  if (w.partOfSpeech !== undefined) w.partOfSpeech = 
-  return w
+export let lexicon = writable(loadedLocalStorage.lexicon.map(w => {
+  if (w.partOfSpeech !== undefined)
+    (w as WordObj).partOfSpeech = loadedLocalStorage.partsOfSpeech
+      .filter(pos => pos.name == w.partOfSpeech)[0];
+  return w as WordObj
 }));
 
 export let partsOfSpeech = writable(loadedLocalStorage.partsOfSpeech);
