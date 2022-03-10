@@ -1,28 +1,25 @@
 import { readable, writable } from "svelte/store";
 import type {Writable} from "svelte/store";
-
-export let pageName = writable("Home");
-export const version = readable("v0.0.0");
-
-export let conName = writable("Foobar");
+import LZString from "lz-string";
 
 export interface localStorageFormat {
+  pageName: string,
+  conName: string,
   characters: CharacterObj[]
   otherCharacters: CharacterObj[]
-  lexicon: StoredWordObj[] | WordObj[]
+  lexicon: StoredWordObj[]
   partsOfSpeech: PartOfSpeechObj[],
   globalPOS: PartOfSpeechObj
 }
 export const defaultLocalStorageFormat = (): localStorageFormat => ({...{
+  pageName: "Home",
+  conName: "Foobar",
   characters: [],
   otherCharacters: [],
   lexicon: [],
   partsOfSpeech: [],
   globalPOS: defaultPartOfSpeech()
 }});
-/*function load(): localStorageFormat {
-
-}*/
 
 export interface CharacterObj {
   char: string,
@@ -32,8 +29,6 @@ export const defaultCharacter = (): CharacterObj => ({...{
   char: "",
   ipa: ""
 }});
-export let characters = writable([] as CharacterObj[]);
-export let otherCharacters = writable([] as CharacterObj[]);
 
 export interface WordObj {
   conWord: string,
@@ -124,11 +119,6 @@ export const defaultRule = (): RuleObj => ({...{
   regex: new RegExp(""),
   subst: ""
 }})
-
-export let lexicon = writable([] as WordObj[]);
-
-export let partsOfSpeech = writable([] as PartOfSpeechObj[]);
-export let globalPOS: Writable<PartOfSpeechObj> = writable(defaultPartOfSpeech());
 export interface ConjTableViewObj {
   x?: ConjugationObj,
   y?: ConjugationObj,
@@ -143,3 +133,24 @@ document.addEventListener("keyup", (e) => {
   shiftKey.set(false);
 });
 */
+let loadedLocalStorage: localStorageFormat = JSON.parse(
+  LZString.decompress(localStorage.conlacata ?? LZString.compress("{}"))
+   ?? "{}");
+// @ts-ignore
+if (loadedLocalStorage == {}) loadedLocalStorage = defaultLocalStorageFormat();
+
+export let pageName = writable(loadedLocalStorage.pageName);
+export const version = readable("v0.0.0");
+
+export let conName = writable(loadedLocalStorage.conName);
+
+export let characters = writable(loadedLocalStorage.characters);
+export let otherCharacters = writable(loadedLocalStorage.otherCharacters);
+
+export let lexicon = writable(loadedLocalStorage.lexicon.map((w): WordObj => {
+  if (w.partOfSpeech !== undefined) w.partOfSpeech = 
+  return w
+}));
+
+export let partsOfSpeech = writable(loadedLocalStorage.partsOfSpeech);
+export let globalPOS: Writable<PartOfSpeechObj> = writable(loadedLocalStorage.globalPOS);
