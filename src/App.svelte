@@ -4,7 +4,7 @@
   import Home from "./pages/Home.svelte";
   import Characters from "./pages/Characters.svelte";
   import {pageName, conName, characters, otherCharacters, lexicon,
-    partsOfSpeech, globalPOS, type localStorageFormat, type StoredWordObj} from "./_stores";
+    partsOfSpeech, globalPOS, type localStorageFormat} from "./_stores";
   import Lexicon from "./pages/Lexicon.svelte";
   import PartsOfSpeech from "./pages/PartsOfSpeech.svelte";
   import LZString from "lz-string";
@@ -18,11 +18,7 @@
       otherCharacters: $otherCharacters,
       partsOfSpeech: $partsOfSpeech,
       globalPOS: $globalPOS,
-      lexicon: $lexicon.map(word => {
-        if (word.partOfSpeech !== undefined)
-          (word as StoredWordObj).partOfSpeech = word.partOfSpeech.name;
-        return word as StoredWordObj
-      })
+      lexicon: $lexicon
     };
     localStorage.conlacata = LZString.compress(JSON.stringify(saved));
   }

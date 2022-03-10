@@ -1,19 +1,22 @@
 <script lang="ts">
-  import { characters, defaultDimension, globalPOS, otherCharacters, type ConjTableViewObj, type DimensionObj, type PartOfSpeechObj } from "../_stores";
+  import { characters, defaultDimension, globalPOS, otherCharacters, partsOfSpeech, type ConjTableViewObj, type DimensionObj, type PartOfSpeechObj } from "../_stores";
   import ConjugationTableAxisSelector from "./ConjugationTableAxisSelector.svelte";
   import {getIPA} from "./Word.svelte";
 
 
-  export let partOfSpeech: PartOfSpeechObj | undefined;
+  export let partOfSpeechName: string | undefined;
+  $: partOfSpeech = partOfSpeechName ?
+    $partsOfSpeech.filter(pos => pos.name == partOfSpeechName)[0] : undefined;
   export let word: string;
   let defaultDim = defaultDimension();
   defaultDim.name = "(Default)";
   
 
-  let charlist = $otherCharacters.concat($characters)
-  let conjugations = partOfSpeech ? partOfSpeech?.conjugations?.concat($globalPOS.conjugations) : $globalPOS.conjugations;
-  let conjTableView = partOfSpeech ? partOfSpeech?.conjTableView : {};
-  console.log(partOfSpeech);
+  $: charlist = $otherCharacters.concat($characters)
+  $: conjugations = partOfSpeech ? partOfSpeech?.conjugations?.concat($globalPOS.conjugations) : $globalPOS.conjugations;
+  $: conjTableView = partOfSpeech ? partOfSpeech?.conjTableView : {};
+  $: console.log(partOfSpeech?.conjugations?.concat($globalPOS.conjugations));
+  $: console.log(conjugations);
   $: xDims = getDims("x", conjTableView);
   $: yDims = getDims("y", conjTableView);
   $: zDims = getDims("z", conjTableView);

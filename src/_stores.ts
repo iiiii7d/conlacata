@@ -7,7 +7,7 @@ export interface localStorageFormat {
   conName: string,
   characters: CharacterObj[]
   otherCharacters: CharacterObj[]
-  lexicon: StoredWordObj[]
+  lexicon: WordObj[]
   partsOfSpeech: PartOfSpeechObj[],
   globalPOS: PartOfSpeechObj
 }
@@ -35,35 +35,13 @@ export interface WordObj {
   fromWord: string,
   description: string,
   pronunciation: string,
-  partOfSpeech?: PartOfSpeechObj,
-  derivedWords: WordObj[],
-  tags: string[],
-  synonyms: string[],
-  antonyms: string[]
-}
-export const defaultWord = (): WordObj => ({...{
-  conWord: "",
-  fromWord: "",
-  description: "",
-  pronunciation: "",
-  partOfSpeech: undefined,
-  derivedWords: [],
-  tags: [],
-  synonyms: [],
-  antonyms: []
-}});
-export interface StoredWordObj {
-  conWord: string,
-  fromWord: string,
-  description: string,
-  pronunciation: string,
   partOfSpeech?: string,
   derivedWords: WordObj[],
   tags: string[],
   synonyms: string[],
   antonyms: string[]
 }
-export const defaultStoredWord = (): StoredWordObj => ({...{
+export const defaultWord = (): WordObj => ({...{
   conWord: "",
   fromWord: "",
   description: "",
@@ -153,12 +131,8 @@ export let characters = writable(loadedLocalStorage.characters
 export let otherCharacters = writable(loadedLocalStorage.otherCharacters
   ?? defaultLocalStorageFormat().otherCharacters);
 
-export let lexicon = writable(loadedLocalStorage.lexicon?.map(w => {
-  if (w.partOfSpeech !== undefined)
-    (w as WordObj).partOfSpeech = loadedLocalStorage.partsOfSpeech
-      .filter(pos => pos.name == w.partOfSpeech)[0];
-  return w as WordObj
-}) ?? defaultLocalStorageFormat().lexicon);
+export let lexicon = writable(loadedLocalStorage.lexicon
+  ?? defaultLocalStorageFormat().lexicon);
 
 export let partsOfSpeech = writable(loadedLocalStorage.partsOfSpeech
   ?? defaultLocalStorageFormat().partsOfSpeech);

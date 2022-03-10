@@ -26,7 +26,6 @@
   import ConjugationTable from "./ConjugationTable.svelte";
 
   $: charlist = $otherCharacters.concat($characters)
-  $: console.log(word);
 
   export let lexicon: Writable<WordObj[]>;
   export let index: number;
@@ -66,10 +65,10 @@
     <h2><ContentEditable placeholderColor="gray" placeholder={`Word in ${$conName}`} bind:value={word.conWord}/></h2>
     <i><b>Pronunciaton:</b> <ContentEditable placeholder={getIPA(word.conWord, charlist)} bind:value={word.pronunciation}/></i><br>
     <b>Direct translation:</b> <ContentEditable placeholder="Base language translation..." bind:value={word.fromWord} /><br>
-    <b>Part of speech:</b> <select bind:value={word.partOfSpeech} on:change={() => $lexicon[index] = word}>
+    <b>Part of speech:</b> <select bind:value={word.partOfSpeech}>
       <option value={undefined}>None</option>
       {#each $partsOfSpeech as pos}
-        <option value={pos}>{pos.name}</option>
+        <option value={pos.name}>{pos.name}</option>
       {/each}
     </select><br><br>
     <b>Description:</b> <ContentEditable placeholder="Description" bind:value={word.description} /><br>
@@ -77,7 +76,7 @@
   <div>
     <details>
       <summary>Conjugation table</summary>
-      <ConjugationTable partOfSpeech={word.partOfSpeech} word={word.conWord}/>
+      <ConjugationTable partOfSpeechName={word.partOfSpeech} word={word.conWord}/>
     </details>
   </div>
   <div><i class="fas fa-trash" on:click={deleteWord}></i></div>
