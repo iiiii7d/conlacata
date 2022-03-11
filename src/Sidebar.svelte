@@ -6,10 +6,13 @@
   },
   {
     "Characters": "a",
-    "Lexicon": "book"
+    "Lexicon": "book",
   },
   {
     "Parts of Speech": "comment-dots"
+  },
+  {
+    "Text to Speech": "headphones",
   },
   {
     "Settings": "gear"

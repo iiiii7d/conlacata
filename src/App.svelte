@@ -9,8 +9,9 @@
   import PartsOfSpeech from "./pages/PartsOfSpeech.svelte";
   import LZString from "lz-string";
   import Settings from "./pages/Settings.svelte";
+  import TextToSpeech from "./pages/TextToSpeech.svelte";
 
-  $: {
+  setInterval(() => {
     let saved: localStorageFormat = {
       pageName: $pageName,
       conName: $conName,
@@ -21,7 +22,7 @@
       lexicon: $lexicon
     };
     localStorage.conlacata = LZString.compress(JSON.stringify(saved));
-  }
+  }, 1000)
 
 </script>
 <style>
@@ -41,5 +42,6 @@
   {:else if $pageName == "Lexicon"}<Lexicon />
   {:else if $pageName == "Parts of Speech"}<PartsOfSpeech />
   {:else if $pageName == "Settings"}<Settings />
+  {:else if $pageName == "Text to Speech"}<TextToSpeech />
   {/if}
 </main>

@@ -30,5 +30,9 @@
   <span>{value || placeholder}</span>
 {:else}
   <span contenteditable {placeholder} style={`--placeholderColor: ${placeholderColor}`}
-  bind:innerHTML={value}></span> <i class="fas fa-pen"></i>
+  bind:textContent={value} on:paste={e => {
+    e.preventDefault();
+    var text = e?.clipboardData?.getData("text/plain");
+    document.execCommand("insertHTML", false, text);
+  }}></span> <i class="fas fa-pen"></i>
 {/if}

@@ -15,7 +15,42 @@
       ipa += word[0];
       word = word.slice(1);
     }
+    ipa = ipa.replaceAll(/(.)\1/g, "$1ː");
     return ipa || "(None)";
+  }
+
+  
+  meSpeak.loadConfig("https://raw.githubusercontent.com/mikolalysenko/mespeak/master/src/mespeak_config.json");
+  meSpeak.loadVoice(voice);
+  export function pronounceIPA(ipa: string) {
+    ipa = ipa.replaceAll('t̠ʃ', "tS").replaceAll("tʃ", "tS");
+    ipa = ipa.replaceAll('d̠ʒ', "dZ").replaceAll("dʒ", "dZ");
+    ipa = ipa.replaceAll('θ', 'T').replaceAll('ð', 'D');
+    ipa = ipa.replaceAll('ʃ', 'S').replaceAll('ʒ', 'Z');
+    ipa = ipa.replaceAll('ŋ', 'N');
+    ipa = ipa.replaceAll('ç', 'C');
+    ipa = ipa.replaceAll('ɹ', 'r');
+    ipa = ipa.replaceAll(/[ɑäɐɜ]/g, 'a');
+    ipa = ipa.replaceAll(/[əɘ]/g, '@');
+    ipa = ipa.replaceAll('ɚ', '3');
+    ipa = ipa.replaceAll(/[ɛæ]/g, 'E');
+    ipa = ipa.replaceAll('e', 'e');
+    ipa = ipa.replaceAll('ɫ', '@L');
+    ipa = ipa.replaceAll('i', 'I');
+    ipa = ipa.replaceAll('ɪ', 'i');
+    ipa = ipa.replaceAll('o', 'O');
+    ipa = ipa.replaceAll('ɔ', '0');
+    ipa = ipa.replaceAll(/[ʌɤ]/g, 'V');
+    ipa = ipa.replaceAll('ʊ', 'U');
+    ipa = ipa.replaceAll(/[ʏ]/g, 'y');
+    ipa = ipa.replaceAll(/[œø]/g, 'Y');
+    ipa = ipa.replaceAll('ʰ', 'h');
+    ipa = ipa.replaceAll('ʀ̥', 'x');
+    ipa = ipa.replaceAll('ɸ', 'f').replaceAll('β', 'v');
+    ipa = ipa.replaceAll('ː', ':');
+    console.log(ipa);
+    meSpeak.loadVoice("../voices/en/en.json");
+    meSpeak.speak(ipa.split(" ").map(i => "[["+i+"]] ").join(""), {speed: 150});
   }
 </script>
 <script lang="ts">
@@ -24,6 +59,7 @@
     partsOfSpeech, type CharacterObj, type WordObj} from "../_stores";
   import type { Writable } from "svelte/store";
   import ConjugationTable from "./ConjugationTable.svelte";
+  import voice from "../mespeak/voices/de.json";
 
   $: charlist = $otherCharacters.concat($characters)
 
@@ -63,7 +99,8 @@
 <div>
   <div>
     <h2><ContentEditable placeholderColor="gray" placeholder={`Word in ${$conName}`} bind:value={word.conWord}/></h2>
-    <i><b>Pronunciaton:</b> <ContentEditable placeholder={getIPA(word.conWord, charlist)} bind:value={word.pronunciation}/></i><br>
+    <i><b>Pronunciaton:</b> <ContentEditable placeholder={getIPA(word.conWord, charlist)} bind:value={word.pronunciation}/></i>
+      <button on:click={() => pronounceIPA(word.pronunciation || getIPA(word.conWord, charlist))}><i class="fas fa-headphones"></i></button><br>
     <b>Direct translation:</b> <ContentEditable placeholder="Base language translation..." bind:value={word.fromWord} /><br>
     <b>Part of speech:</b> <select bind:value={word.partOfSpeech}>
       <option value={undefined}>None</option>
