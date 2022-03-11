@@ -24,10 +24,16 @@ export const defaultLocalStorageFormat = (): localStorageFormat => ({...{
 export interface CharacterObj {
   char: string,
   ipa: string,
+  //isVowel: boolean,
+  //isConsonant: boolean,
+  //isMarker: boolean
 }
 export const defaultCharacter = (): CharacterObj => ({...{
   char: "",
-  ipa: ""
+  ipa: "",
+  //isVowel: false,
+  //isConsonant: false,
+  //isMarker: false
 }});
 
 export interface WordObj {
@@ -98,9 +104,9 @@ export const defaultRule = (): RuleObj => ({...{
   subst: ""
 }})
 export interface ConjTableViewObj {
-  x?: ConjugationObj,
-  y?: ConjugationObj,
-  z?: ConjugationObj
+  x?: string,
+  y?: string,
+  z?: string
 }
 /*export let shiftKey = writable(false);
 

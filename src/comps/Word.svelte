@@ -22,6 +22,7 @@
   
   meSpeak.loadConfig("https://raw.githubusercontent.com/mikolalysenko/mespeak/master/src/mespeak_config.json");
   export function pronounceIPA(ipa: string) {
+    ipa = ipa.replaceAll('ˈ', '\'').replaceAll('ˌ', ',');
     ipa = ipa.replaceAll('t̠ʃ', "tS").replaceAll("tʃ", "tS");
     ipa = ipa.replaceAll('d̠ʒ', "dZ").replaceAll("dʒ", "dZ");
     ipa = ipa.replaceAll('θ', 'T').replaceAll('ð', 'D');
@@ -29,6 +30,8 @@
     ipa = ipa.replaceAll('ŋ', 'N');
     ipa = ipa.replaceAll('ç', 'C');
     ipa = ipa.replaceAll('ɹ', 'r');
+    ipa = ipa.replaceAll('ɣ', 'X');
+    ipa = ipa.replaceAll('ɢ', 'Q');
     ipa = ipa.replaceAll(/[ɑäɐɜ]/g, 'a');
     ipa = ipa.replaceAll(/[əɘ]/g, '@');
     ipa = ipa.replaceAll('ɚ', '3');
@@ -49,7 +52,8 @@
     ipa = ipa.replaceAll('ː', ':');
     console.log(ipa);
     meSpeak.loadVoice("https://raw.githubusercontent.com/mikolalysenko/mespeak/master/voices/en/en.json");
-    meSpeak.speak(ipa.split(" ").map(i => "[["+i+"]] ").join(""), {speed: 150});
+    meSpeak.speak(ipa.split(" ").map(i => "[["+i+"]] ").join("")
+      .replaceAll(".]]", "]].").replaceAll(",]]", "]],"), {speed: 150});
   }
 </script>
 <script lang="ts">
