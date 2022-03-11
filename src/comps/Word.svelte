@@ -21,7 +21,6 @@
 
   
   meSpeak.loadConfig("https://raw.githubusercontent.com/mikolalysenko/mespeak/master/src/mespeak_config.json");
-  meSpeak.loadVoice(voice);
   export function pronounceIPA(ipa: string) {
     ipa = ipa.replaceAll('t̠ʃ', "tS").replaceAll("tʃ", "tS");
     ipa = ipa.replaceAll('d̠ʒ', "dZ").replaceAll("dʒ", "dZ");
@@ -49,7 +48,7 @@
     ipa = ipa.replaceAll('ɸ', 'f').replaceAll('β', 'v');
     ipa = ipa.replaceAll('ː', ':');
     console.log(ipa);
-    meSpeak.loadVoice("../voices/en/en.json");
+    meSpeak.loadVoice("https://raw.githubusercontent.com/mikolalysenko/mespeak/master/voices/en/en.json");
     meSpeak.speak(ipa.split(" ").map(i => "[["+i+"]] ").join(""), {speed: 150});
   }
 </script>
@@ -59,7 +58,6 @@
     partsOfSpeech, type CharacterObj, type WordObj} from "../_stores";
   import type { Writable } from "svelte/store";
   import ConjugationTable from "./ConjugationTable.svelte";
-  import voice from "../mespeak/voices/de.json";
 
   $: charlist = $otherCharacters.concat($characters)
 
