@@ -2,7 +2,7 @@
   import { characters, defaultDimension, globalPOS, otherCharacters,
     partsOfSpeech, type ConjTableViewObj, type ConjugationObj, type DimensionObj, type PartOfSpeechObj } from "../_stores";
   import ConjugationTableAxisSelector from "./ConjugationTableAxisSelector.svelte";
-  import {getIPA} from "./Word.svelte";
+  import {getIPA, pronounceIPA} from "./Word.svelte";
 
 
   export let partOfSpeechName: string | undefined;
@@ -103,14 +103,18 @@
                 [dimx, conjTableView.x],
                 [dimy, conjTableView.y],
                 [dimz, conjTableView.z])}
-              <td>{conj}<br><i class="conj-ipa">{getIPA(conj, charlist)}</i></td>
+              <td>{conj}<br><i class="conj-ipa">{getIPA(conj, charlist)}</i>
+                <button on:click={() => pronounceIPA(getIPA(conj, charlist))}><i class="fas fa-headphones"></i></button></td>
             {:else}
               <td>{applyConjugation(word,
                 [dimy, conjTableView.y],
                 [dimz, conjTableView.z])}<br>
                 <i class="conj-ipa">{getIPA(applyConjugation(word,
                   [dimy, conjTableView.y],
-                  [dimz, conjTableView.z]), charlist)}</i></td>
+                  [dimz, conjTableView.z]), charlist)}</i>
+                    <button on:click={() => pronounceIPA(getIPA(applyConjugation(word,
+                      [dimy, conjTableView.y],
+                      [dimz, conjTableView.z]), charlist))}><i class="fas fa-headphones"></i></button></td>
             {/each}
           </tr>
         {/each}
