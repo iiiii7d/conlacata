@@ -2,3 +2,4 @@
 build
 node_modules
 .replit
+.DS_Store
