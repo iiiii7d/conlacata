@@ -1,0 +1,55 @@
+[[letters]]
+forms = ['A', 'a']
+pronunciation = ['a']
+
+[[letters]]
+forms = ['E', 'e']
+pronunciation = ['e']
+
+[[letters]]
+forms = ['I', 'i']
+pronunciation = ['i']
+
+[[letters]]
+forms = ['J', 'j']
+pronunciation = ['j']
+
+[[letters]]
+forms = ['K', 'k']
+pronunciation = ['k']
+
+[[letters]]
+forms = ['L', 'l']
+pronunciation = ['l']
+
+[[letters]]
+forms = ['M', 'm']
+pronunciation = ['m']
+
+[[letters]]
+forms = ['N', 'n']
+pronunciation = ['n']
+
+[[letters]]
+forms = ['O', 'o']
+pronunciation = ['o']
+
+[[letters]]
+forms = ['P', 'p']
+pronunciation = ['p']
+
+[[letters]]
+forms = ['S', 's']
+pronunciation = ['s']
+
+[[letters]]
+forms = ['T', 't']
+pronunciation = ['t']
+
+[[letters]]
+forms = ['U', 'u']
+pronunciation = ['u']
+
+[[letters]]
+forms = ['W', 'w']
+pronunciation = ['w']
