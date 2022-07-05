@@ -1,0 +1,126 @@
+[[parts]]
+name = "Noun"
+abbrev = "nn"
+
+    [[parts.conjugations]]
+    name = "Quantity"
+
+        [[parts.conjugations.dimensions]]
+        name = "Singular"
+        original_form = true
+
+        [[parts.conjugations.dimensions]]
+        name = "Plural"
+        rules = [
+            { spelling_regex = "$", spelling_subst = "en" }
+        ]
+
+[[parts]]
+name = "Verb"
+abbrev = "vb"
+
+    [[parts.conjugations]]
+    name = "Continuity"
+
+        [[parts.conjugations.dimensions]]
+        name = "Non-continuous"
+        original_form = true
+
+        [[parts.conjugations.dimensions]]
+        name = "Continuous"
+        rules = [
+            { spelling_regex = "$", spelling_subst = "êŋ" }
+        ]
+
+    [[parts.conjugations]]
+    name = "Perfectness"
+
+        [[parts.conjugations.dimensions]]
+        name = "Imperfect"
+        original_form = true
+
+        [[parts.conjugations.dimensions]]
+        name = "Perfect"
+        rules = [
+            { spelling_regex = "$", spelling_subst = "wö" }
+        ]
+
+    [[parts.conjugations]]
+    name = "Tense"
+    multi_dimensional = true
+
+        [[parts.conjugations.dimensions]]
+        name = "Past"
+        rules = [
+            { spelling_regex = "$", spelling_subst = "aj" }
+        ]
+
+        [[parts.conjugations.dimensions]]
+        name = "Present"
+        original_form = true
+
+        [[parts.conjugations.dimensions]]
+        name = "Future"
+        rules = [
+            { spelling_regex = "$", spelling_subst = "va" }
+        ]
+
+        [[parts.conjugations.dimensions]]
+        name = "Time-independent"
+        rules = [
+            { spelling_regex = "$", spelling_subst = "kö" }
+        ]
+
+    [[parts.conjugations]]
+    name = "Negativity"
+
+        [[parts.conjugations.dimensions]]
+        name = "Positive"
+        original_form = true
+
+        [[parts.conjugations.dimensions]]
+        name = "Negative"
+        rules = [
+            { spelling_regex = "$", spelling_subst = "naė" }
+        ]
+
+    [[parts.conjugations]]
+    name = "Passiveness"
+
+        [[parts.conjugations.dimensions]]
+        name = "Active"
+        original_form = true
+
+        [[parts.conjugations.dimensions]]
+        name = "Passive"
+        rules = [
+            { spelling_regex = "$", spelling_subst = "p̌at" }
+        ]
+
+[[parts]]
+name = "Adjective"
+abbrev = "adj"
+
+    [[parts.conjugations]]
+    name = "Comparison"
+    multi_dimensional = true
+
+        [[parts.conjugations.dimensions]]
+        name = "None"
+        original_form = true
+
+        [[parts.conjugations.dimensions]]
+        name = "Comparative"
+        rules = [
+            { spelling_regex = "$", spelling_subst = "án" }
+        ]
+
+        [[parts.conjugations.dimensions]]
+        name = "Superlative"
+        rules = [
+            { spelling_regex = "$", spelling_subst = "æs" }
+        ]
+
+[[parts]]
+name = "Determiner"
+abbrev = "det"

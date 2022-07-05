@@ -4,11 +4,12 @@ use ansi_term::Color::Yellow;
 use ansi_term::Style;
 use serde::{Serialize, Deserialize};
 use clap::Parser;
+use crate::types::{ConlangString, IpaString};
 
 #[derive(Serialize, Deserialize)]
 pub struct Letter {
-    forms: Vec<String>,
-    pronunciation: String,
+    pub forms: Vec<ConlangString>,
+    pub pronunciation: IpaString,
 }
 impl Display for Letter {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -17,12 +18,15 @@ impl Display for Letter {
             .map(|s| Yellow.bold().paint(s).to_string())
             .collect::<Vec<_>>()
             .join(" / "),
-        Style::new().italic().paint(self.pronunciation.to_owned()))
+        Style::new().italic().paint(format!("[{}]", self.pronunciation)))
     }
 }
 #[derive(Serialize, Deserialize)]
 pub struct Orthography {
-    letters: Vec<Letter>,
+    #[serde(default = "Vec::new")]
+    pub letters: Vec<Letter>,
+    #[serde(default = "Vec::new")]
+    pub other_chars: Vec<Letter>,
 }
 impl Display for Orthography {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {

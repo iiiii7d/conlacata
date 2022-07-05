@@ -1,14 +1,86 @@
 [[letters]]
 forms = ['A', 'a']
-pronunciation = 'a'
+pronunciation = 'ɑ'
+
+[[letters]]
+forms = ['Æ', 'æ']
+pronunciation = 'ɛ'
+
+[[letters]]
+forms = ['Ä', 'ä']
+pronunciation = 'e'
+
+[[letters]]
+forms = ['Â', 'â']
+pronunciation = 'o'
+
+[[letters]]
+forms = ['B', 'b']
+pronunciation = 'b'
+
+[[letters]]
+forms = ['D', 'd']
+pronunciation = 'd'
+
+[[letters]]
+forms = ['Ḑ', 'ḑ']
+pronunciation = 'd̠ʒ'
+
+[[letters]]
+forms = ['Ð', 'ð']
+pronunciation = 'ð'
 
 [[letters]]
 forms = ['E', 'e']
+pronunciation = 'ə'
+
+[[letters]]
+forms = ['Ë', 'ë']
 pronunciation = 'e'
+
+[[letters]]
+forms = ['Ê', 'ê']
+pronunciation = 'i'
+
+[[letters]]
+forms = ['Ė', 'ė']
+pronunciation = 'ɑ'
+
+[[letters]]
+forms = ['Ẹ', 'ẹ']
+pronunciation = 'ɔ'
+
+[[letters]]
+forms = ['F', 'f']
+pronunciation = 'f'
+
+[[letters]]
+forms = ['G', 'g']
+pronunciation = 'g'
+
+[[letters]]
+forms = ['Ǥ', 'ǥ']
+pronunciation = 'ɣ'
+
+[[letters]]
+forms = ['Ĝ', 'ĝ']
+pronunciation = 'ɢ'
+
+[[letters]]
+forms = ['H', 'h']
+pronunciation = 'h'
 
 [[letters]]
 forms = ['I', 'i']
 pronunciation = 'i'
+
+[[letters]]
+forms = ['Ï', 'ï']
+pronunciation = 'ɨ̈'
+
+[[letters]]
+forms = ['Î', 'î']
+pronunciation = 'ɪ'
 
 [[letters]]
 forms = ['J', 'j']
@@ -23,6 +95,10 @@ forms = ['L', 'l']
 pronunciation = 'l'
 
 [[letters]]
+forms = ['Ł', 'ł']
+pronunciation = 'ɫ'
+
+[[letters]]
 forms = ['M', 'm']
 pronunciation = 'm'
 
@@ -31,25 +107,211 @@ forms = ['N', 'n']
 pronunciation = 'n'
 
 [[letters]]
+forms = ['Ŋ', 'ŋ']
+pronunciation = 'ŋ'
+
+[[letters]]
 forms = ['O', 'o']
+pronunciation = 'ɔ'
+
+[[letters]]
+forms = ['Ö', 'ö']
 pronunciation = 'o'
+
+[[letters]]
+forms = ['Ô', 'ô']
+pronunciation = 'u'
+
+[[letters]]
+forms = ['Ø', 'ø']
+pronunciation = 'ø'
 
 [[letters]]
 forms = ['P', 'p']
 pronunciation = 'p'
 
 [[letters]]
+forms = ['Q', 'q']
+pronunciation = 'q'
+
+[[letters]]
+forms = ['R', 'r']
+pronunciation = 'ɹ'
+
+[[letters]]
+forms = ['Ɍ', 'ɍ']
+pronunciation = 'ʀ'
+
+[[letters]]
 forms = ['S', 's']
 pronunciation = 's'
+
+[[letters]]
+forms = ['Š', 'š']
+pronunciation = 't͡s'
+
+[[letters]]
+forms = ['Ş', 'ş']
+pronunciation = 'ʃ'
 
 [[letters]]
 forms = ['T', 't']
 pronunciation = 't'
 
 [[letters]]
+forms = ['Ţ', 'ţ']
+pronunciation = 't̠ʃ'
+
+[[letters]]
+forms = ['Þ', 'þ']
+pronunciation = 'θ'
+
+[[letters]]
 forms = ['U', 'u']
 pronunciation = 'u'
 
 [[letters]]
+forms = ['Ü', 'ü']
+pronunciation = 'y'
+
+[[letters]]
+forms = ['V', 'v']
+pronunciation = 'v'
+
+[[letters]]
 forms = ['W', 'w']
+pronunciation = 'ɸ'
+
+[[letters]]
+forms = ['Ẅ', 'ẅ']
+pronunciation = 'β'
+
+[[letters]]
+forms = ['Ŵ', 'ŵ']
 pronunciation = 'w'
+
+[[letters]]
+forms = ['X', 'x']
+pronunciation = 'x'
+
+[[letters]]
+forms = ['Ẍ', 'ẍ']
+pronunciation = 'ʀ̥'
+
+[[letters]]
+forms = ['Y', 'y']
+pronunciation = 'y'
+
+[[letters]]
+forms = ['Z', 'z']
+pronunciation = 'z'
+
+[[letters]]
+forms = ['Ž', 'ž']
+pronunciation = 'd͡z'
+
+[[letters]]
+forms = ['Ʒ', 'ʒ']
+pronunciation = 'ʒ'
+
+[[other_chars]]
+forms = ['Á', 'á']
+pronunciation = 'ɑː'
+
+[[other_chars]]
+forms = ['Ǽ', 'ǽ']
+pronunciation = 'ɛː'
+
+[[other_chars]]
+forms = ['Ǟ', 'ǟ']
+pronunciation = 'eː'
+
+[[other_chars]]
+forms = ['Ấ', 'ấ']
+pronunciation = 'oː'
+
+[[other_chars]]
+forms = ['É', 'é']
+pronunciation = 'əː'
+
+[[other_chars]]
+forms = ['Ë̄', 'ë̄']
+pronunciation = 'eː'
+
+[[other_chars]]
+forms = ['Ế', 'ế']
+pronunciation = 'iː'
+
+[[other_chars]]
+forms = ['Í', 'í']
+pronunciation = 'iː'
+
+[[other_chars]]
+forms = ['Ḯ', 'ḯ']
+pronunciation = 'ɨː'
+
+[[other_chars]]
+forms = ['Ĺ', 'ĺ']
+pronunciation = 'lː'
+
+[[other_chars]]
+forms = ['Ó', 'ó']
+pronunciation = 'ɔː'
+
+[[other_chars]]
+forms = ['Ȫ', 'ȫ']
+pronunciation = 'oː'
+
+[[other_chars]]
+forms = ['Ố', 'ố']
+pronunciation = 'uː'
+
+[[other_chars]]
+forms = ['Ǿ', 'ǿ']
+pronunciation = 'øː'
+
+[[other_chars]]
+forms = ['Ŕ', 'ŕ']
+pronunciation = 'ɹː'
+
+[[other_chars]]
+forms = ['Ú', 'ú']
+pronunciation = 'uː'
+
+[[other_chars]]
+forms = ['Ǘ', 'ǘ']
+pronunciation = 'yː'
+
+[[other_chars]]
+forms = ['Ý', 'ý']
+pronunciation = 'yː'
+
+[[other_chars]]
+forms = ['Ǩ', 'ǩ']
+pronunciation = 'kʰ'
+
+[[other_chars]]
+forms = ['P̌', 'p̌']
+pronunciation = 'pʰ'
+
+[[other_chars]]
+forms = ['Q̌', 'q̌']
+pronunciation = 'qʰ'
+
+[[other_chars]]
+forms = ['Ť', 'ť']
+pronunciation = 'tʰ'
+
+# TODO markers
+
+[[other_chars]]
+forms = ['PF', 'Pf', 'pf']
+pronunciation = 'pɸ'
+
+[[other_chars]]
+forms = ['BV', 'Bv', 'bv']
+pronunciation = 'bβ'
+
+[[other_chars]]
+forms = ['WN', 'Wn', 'wn']
+pronunciation = 'ɸən'
