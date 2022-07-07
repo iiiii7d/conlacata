@@ -3,9 +3,9 @@ use ansi_term::Color::White;
 use clap::Parser;
 use unicode_segmentation::UnicodeSegmentation;
 use crate::modules::orthography::Orthography;
-use crate::types::{ConlangString, IpaString};
+use crate::types::{ConlangString, IpaString, ResultAnyError};
 
-pub fn conlang_to_ipa(input: ConlangString, ortho: Orthography) -> IpaString {
+pub fn conlang_to_ipa(input: ConlangString, ortho: &Orthography) -> IpaString {
     let mut ipa = String::new();
     let mut graphemes = input.graphemes(true).enumerate();
     'outer: while let Some((index, grapheme)) = graphemes.next() {
@@ -17,7 +17,9 @@ pub fn conlang_to_ipa(input: ConlangString, ortho: Orthography) -> IpaString {
             for form in letter.forms.iter() {
                 if input.graphemes(true).skip(index)
                     .collect::<String>().starts_with(form) {
-                    ipa += &*letter.pronunciation;
+                    ipa += if let Some(last) = ipa.graphemes(true).last() {
+                        if last == &*letter.pronunciation {"ː"} else {&*letter.pronunciation}
+                    } else {&*letter.pronunciation};
                     for _ in 0..(form.graphemes(true).count() - 1) {
                         graphemes.next();
                     }
@@ -37,11 +39,11 @@ pub struct IpaOptions {
     input: ConlangString,
 }
 impl IpaOptions {
-    pub fn run(&self) {
-        let file = self.lang_folder.join("orthography.toml");
-        let ortho = Orthography::from_file(file);
+    pub fn run(&self) -> ResultAnyError<()> {
+        let ortho = Orthography::from_lang_folder(self.lang_folder.to_owned())?;
         println!("{}\n[{}]",
             White.dimmed().paint(self.input.to_owned()),
-            conlang_to_ipa(self.input.to_owned(), ortho));
+            conlang_to_ipa(self.input.to_owned(), &ortho));
+        Ok(())
     }
 }

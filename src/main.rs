@@ -1,3 +1,6 @@
+extern crate core;
+
+use ansi_term::Color::Red;
 use clap::Parser;
 
 mod modules;
@@ -22,6 +25,8 @@ enum Subcmd {
     PartsOfSpeech(modules::parts_of_speech::PartsOfSpeechOptions),
     #[clap(alias = "lex")]
     Lexicon(modules::lexicon::LexiconOptions),
+    #[clap(alias = "conj")]
+    Conjugation(modules::lexicon::ConjugationOptions),
 }
 
 fn main() {
@@ -31,5 +36,8 @@ fn main() {
         Subcmd::Ipa(v) => v.run(),
         Subcmd::PartsOfSpeech(v) => v.run(),
         Subcmd::Lexicon(v) => v.run(),
-    }
+        Subcmd::Conjugation(v) => v.run(),
+    }.unwrap_or_else(|e| {
+        eprintln!("{}", Red.paint(e.to_string()))
+    })
 }

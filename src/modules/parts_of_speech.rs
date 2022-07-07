@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use ansi_term::Color::{Green, White, Yellow};
 use serde::{Deserialize, Serialize};
 use clap::Parser;
-use crate::types::{ConlangString, IpaString};
+use crate::types::{ConlangString, IpaString, ResultAnyError};
 
 const RETURNS_FALSE: fn() -> bool = || false;
 
@@ -125,9 +125,13 @@ impl Display for PartsOfSpeech {
     }
 }
 impl PartsOfSpeech {
-    pub fn from_file(path: PathBuf) -> Self {
-        let content = std::fs::read_to_string(path).unwrap();
-        toml::from_str(&content).unwrap()
+    pub fn from_file(path: PathBuf) -> ResultAnyError<Self> {
+        let content = std::fs::read_to_string(path)?;
+        Ok(toml::from_str(&content)?)
+    }
+    pub fn from_lang_folder(lang_folder: PathBuf) -> ResultAnyError<Self> {
+        let file = lang_folder.join("parts_of_speech.toml");
+        PartsOfSpeech::from_file(file)
     }
 }
 
@@ -136,9 +140,9 @@ pub struct PartsOfSpeechOptions {
     lang_folder: PathBuf
 }
 impl PartsOfSpeechOptions {
-    pub fn run(&self) {
-        let file = self.lang_folder.join("parts_of_speech.toml");
-        let data = PartsOfSpeech::from_file(file);
+    pub fn run(&self) -> ResultAnyError<()> {
+        let data = PartsOfSpeech::from_lang_folder(self.lang_folder.to_owned())?;
         println!("{}", data);
+        Ok(())
     }
 }

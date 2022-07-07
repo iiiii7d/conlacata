@@ -4,7 +4,7 @@ use ansi_term::Color::Yellow;
 use ansi_term::Style;
 use serde::{Serialize, Deserialize};
 use clap::Parser;
-use crate::types::{ConlangString, IpaString};
+use crate::types::{ConlangString, IpaString, ResultAnyError};
 
 #[derive(Serialize, Deserialize)]
 pub struct Letter {
@@ -44,9 +44,13 @@ impl Display for Orthography {
     }
 }
 impl Orthography {
-    pub fn from_file(path: PathBuf) -> Self {
-        let content = std::fs::read_to_string(path).unwrap();
-        toml::from_str(&content).unwrap()
+    pub fn from_file(path: PathBuf) -> ResultAnyError<Self> {
+        let content = std::fs::read_to_string(path)?;
+        Ok(toml::from_str(&content)?)
+    }
+    pub fn from_lang_folder(lang_folder: PathBuf) -> ResultAnyError<Self> {
+        let file = lang_folder.join("orthography.toml");
+        Orthography::from_file(file)
     }
 }
 
@@ -55,9 +59,9 @@ pub struct OrthographyOptions {
     lang_folder: PathBuf
 }
 impl OrthographyOptions {
-    pub fn run(&self) {
-        let file = self.lang_folder.join("orthography.toml");
-        let data = Orthography::from_file(file);
+    pub fn run(&self) -> ResultAnyError<()> {
+        let data = Orthography::from_lang_folder(self.lang_folder.to_owned())?;
         println!("{}", data);
+        Ok(())
     }
 }
