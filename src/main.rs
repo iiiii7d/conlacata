@@ -19,7 +19,9 @@ enum Subcmd {
     Orthography(modules::orthography::OrthographyOptions),
     Ipa(modules::ipa::IpaOptions),
     #[clap(alias = "pos")]
-    PartsOfSpeech(modules::parts_of_speech::PartsOfSpeechOptions)
+    PartsOfSpeech(modules::parts_of_speech::PartsOfSpeechOptions),
+    #[clap(alias = "lex")]
+    Lexicon(modules::lexicon::LexiconOptions),
 }
 
 fn main() {
@@ -28,5 +30,6 @@ fn main() {
         Subcmd::Orthography(v) => v.run(),
         Subcmd::Ipa(v) => v.run(),
         Subcmd::PartsOfSpeech(v) => v.run(),
+        Subcmd::Lexicon(v) => v.run(),
     }
 }
