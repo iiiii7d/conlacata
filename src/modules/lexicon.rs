@@ -8,6 +8,7 @@ use clap::Parser;
 use either::Either;
 use indexmap::IndexMap;
 use regex::Regex;
+use crate::CliOptions;
 use crate::modules::ipa::conlang_to_ipa;
 use crate::modules::orthography::Orthography;
 use crate::modules::parts_of_speech::{PartOfSpeech, PartsOfSpeech};
@@ -147,15 +148,12 @@ impl<'a> Lexicon<'a> {
 
 #[derive(Parser)]
 pub struct LexiconOptions {
-    lang_folder: PathBuf,
     search: Option<String>
 }
-impl LexiconOptions {
-    pub fn run(&self) -> ResultAnyError<()> {
-        let file = self.lang_folder.join("lexicon/");
-        let psos = PartsOfSpeech::from_file(
-            self.lang_folder.join("parts_of_speech.toml"))?;
-        let mut lexicon = Lexicon::from_folder(file, &psos)?;
+impl CliOptions for LexiconOptions {
+    fn run(&self, lang_folder: PathBuf) -> ResultAnyError<()> {
+        let psos = PartsOfSpeech::from_lang_folder(lang_folder.to_owned())?;
+        let mut lexicon = Lexicon::from_lang_folder(lang_folder, &psos)?;
         if let Some(query) = &self.search {
             let query = Regex::new(&*query)?;
             lexicon.words = lexicon.words.into_iter()
@@ -172,15 +170,14 @@ const CONJ_ERROR: &str = "Use `<conjugation>` (non-dimensional) / `<conjugation>
 
 #[derive(Parser)]
 pub struct ConjugationOptions {
-    lang_folder: PathBuf,
     word: ConlangString,
     conjugations: Vec<String>
 }
-impl ConjugationOptions {
-    pub fn run(&self) -> ResultAnyError<()> {
-        let psos = PartsOfSpeech::from_lang_folder(self.lang_folder.to_owned())?;
-        let ortho = Orthography::from_lang_folder(self.lang_folder.to_owned())?;
-        let lexicon = Lexicon::from_lang_folder(self.lang_folder.to_owned(), &psos)?;
+impl CliOptions for ConjugationOptions {
+    fn run(&self, lang_folder: PathBuf) -> ResultAnyError<()> {
+        let psos = PartsOfSpeech::from_lang_folder(lang_folder.to_owned())?;
+        let ortho = Orthography::from_lang_folder(lang_folder.to_owned())?;
+        let lexicon = Lexicon::from_lang_folder(lang_folder, &psos)?;
         let word = if let Some(word) = lexicon.words.iter()
             .find(|w| w.spelling == self.word) {word.to_owned()} else {
             Word {

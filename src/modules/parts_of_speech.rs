@@ -3,6 +3,7 @@ use std::path::PathBuf;
 use ansi_term::Color::{Green, White, Yellow};
 use serde::{Deserialize, Serialize};
 use clap::Parser;
+use crate::CliOptions;
 use crate::types::{ConlangString, IpaString, ResultAnyError};
 
 const RETURNS_FALSE: fn() -> bool = || false;
@@ -136,12 +137,10 @@ impl PartsOfSpeech {
 }
 
 #[derive(Parser)]
-pub struct PartsOfSpeechOptions {
-    lang_folder: PathBuf
-}
-impl PartsOfSpeechOptions {
-    pub fn run(&self) -> ResultAnyError<()> {
-        let data = PartsOfSpeech::from_lang_folder(self.lang_folder.to_owned())?;
+pub struct PartsOfSpeechOptions;
+impl CliOptions for PartsOfSpeechOptions {
+    fn run(&self, lang_folder: PathBuf) -> ResultAnyError<()> {
+        let data = PartsOfSpeech::from_lang_folder(lang_folder)?;
         println!("{}", data);
         Ok(())
     }

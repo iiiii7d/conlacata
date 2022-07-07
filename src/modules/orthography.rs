@@ -4,6 +4,7 @@ use ansi_term::Color::Yellow;
 use ansi_term::Style;
 use serde::{Serialize, Deserialize};
 use clap::Parser;
+use crate::CliOptions;
 use crate::types::{ConlangString, IpaString, ResultAnyError};
 
 #[derive(Serialize, Deserialize)]
@@ -55,12 +56,10 @@ impl Orthography {
 }
 
 #[derive(Parser)]
-pub struct OrthographyOptions {
-    lang_folder: PathBuf
-}
-impl OrthographyOptions {
-    pub fn run(&self) -> ResultAnyError<()> {
-        let data = Orthography::from_lang_folder(self.lang_folder.to_owned())?;
+pub struct OrthographyOptions;
+impl CliOptions for OrthographyOptions {
+    fn run(&self, lang_folder: PathBuf) -> ResultAnyError<()> {
+        let data = Orthography::from_lang_folder(lang_folder.to_owned())?;
         println!("{}", data);
         Ok(())
     }

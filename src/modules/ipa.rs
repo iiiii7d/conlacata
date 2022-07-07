@@ -2,6 +2,7 @@ use std::path::PathBuf;
 use ansi_term::Color::White;
 use clap::Parser;
 use unicode_segmentation::UnicodeSegmentation;
+use crate::CliOptions;
 use crate::modules::orthography::Orthography;
 use crate::types::{ConlangString, IpaString, ResultAnyError};
 
@@ -34,13 +35,12 @@ pub fn conlang_to_ipa(input: ConlangString, ortho: &Orthography) -> IpaString {
 
 #[derive(Parser)]
 pub struct IpaOptions {
-    lang_folder: PathBuf,
     /// Input in conlang to translate to IPA
     input: ConlangString,
 }
-impl IpaOptions {
-    pub fn run(&self) -> ResultAnyError<()> {
-        let ortho = Orthography::from_lang_folder(self.lang_folder.to_owned())?;
+impl CliOptions for IpaOptions {
+    fn run(&self, lang_folder: PathBuf) -> ResultAnyError<()> {
+        let ortho = Orthography::from_lang_folder(lang_folder)?;
         println!("{}\n[{}]",
             White.dimmed().paint(self.input.to_owned()),
             conlang_to_ipa(self.input.to_owned(), &ortho));
