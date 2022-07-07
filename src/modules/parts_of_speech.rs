@@ -29,13 +29,13 @@ impl Display for Rule {
 
 #[derive(Serialize, Deserialize)]
 pub struct Dimension {
-    name: String,
+    pub name: String,
     #[serde(default = "String::new")]
-    description: String,
+    pub description: String,
     #[serde(default = "RETURNS_FALSE")]
     pub original_form: bool,
     #[serde(default = "Vec::new")]
-    rules: Vec<Rule>
+    pub rules: Vec<Rule>
 }
 impl Display for Dimension {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -112,7 +112,7 @@ impl Display for PartOfSpeech {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Default)]
 pub struct PartsOfSpeech {
     pub parts: Vec<PartOfSpeech>
 }

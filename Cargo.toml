@@ -11,3 +11,4 @@ toml = "~0.5.9"
 serde = { version = "~1.0.138", features = ["derive"] }
 ansi_term = "~0.12.1"
 unicode-segmentation = "~1.9.0"
+either = "~1.7.0"
