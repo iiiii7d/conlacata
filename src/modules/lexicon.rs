@@ -25,7 +25,7 @@ pub struct Word<'a> {
 }
 impl Display for Word<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{} {}\n{}\n{}",
+        write!(f, "{} {}\n{}{}",
             Yellow.bold().paint(self.spelling.to_owned()),
             Green.paint(format!("({})", if let Some(pos) = self.get_pos() {
                 pos.abbrev.to_owned()
@@ -157,9 +157,10 @@ impl LexiconOptions {
             self.lang_folder.join("parts_of_speech.toml"))?;
         let mut lexicon = Lexicon::from_folder(file, &psos)?;
         if let Some(query) = &self.search {
+            let query = Regex::new(&*query)?;
             lexicon.words = lexicon.words.into_iter()
-                .filter(|w| w.spelling.contains(query))
-                .collect(); // TODO Regex thingy
+                .filter(|w| query.is_match(&w.spelling))
+                .collect();
         }
         println!("{}", lexicon);
         Ok(())
