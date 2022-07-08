@@ -189,6 +189,14 @@ impl CliOptions for ConjugationOptions {
                 ..Default::default()
             }
         };
+        if !psos.parts.iter().any(|p| p.name == word.pos) {
+            return Err(format!("No part of speech named {}\n{}", word.pos,
+                Yellow.paint(format!("Valid parts of speech: {}",
+                    psos.parts.iter()
+                        .map(|p| p.name.to_owned())
+                        .collect::<Vec<_>>()
+                        .join(", ")))).into())
+        }
 
         let conjugations = self.conjugations.iter().map(|c| {
             let conj_name = c.split(':').next().ok_or(CONJ_ERROR)?.to_string();

@@ -59,7 +59,7 @@ impl Orthography {
 pub struct OrthographyOptions;
 impl CliOptions for OrthographyOptions {
     fn run(&self, lang_folder: PathBuf) -> ResultAnyError<()> {
-        let data = Orthography::from_lang_folder(lang_folder.to_owned())?;
+        let data = Orthography::from_lang_folder(lang_folder)?;
         println!("{}", data);
         Ok(())
     }
