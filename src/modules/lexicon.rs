@@ -1,14 +1,14 @@
 use std::{
-    error::Error,
     fmt::Display,
     fs,
     path::{Path, PathBuf},
 };
 
-use ansi_term::Color::{Green, White, Yellow};
 use clap::Parser;
+use color_eyre::{eyre::eyre, Report, Result};
 use either::Either;
 use indexmap::IndexMap;
+use owo_colors::OwoColorize;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
@@ -18,13 +18,13 @@ use crate::{
         orthography::Orthography,
         parts_of_speech::{PartOfSpeech, PartsOfSpeech},
     },
-    types::{ConlangString, IpaString, ResultAnyError},
+    types::{ConlangString, IpaString},
     CliOptions,
 };
 
 #[derive(Serialize, Deserialize, Default, Clone)]
 pub struct Word<'a> {
-    pub spelling: String,
+    pub spelling: ConlangString,
     pub pos: String,
     pub definitions: Vec<String>,
     #[serde(default = "Vec::new")]
@@ -37,19 +37,18 @@ impl Display for Word<'_> {
         write!(
             f,
             "{} {}\n{}{}",
-            Yellow.bold().paint(self.spelling.to_owned()),
-            Green.paint(format!(
+            self.spelling.yellow().bold(),
+            format!(
                 "({})",
                 if let Some(pos) = self.get_pos() {
                     pos.abbrev.to_owned()
                 } else {
                     self.pos.to_owned()
                 }
-            )),
+            )
+            .green(),
             self.definitions.join(", "),
-            White
-                .dimmed()
-                .paint(format!("\nCategories: {}", self.categories.join(", ")))
+            format!("\nCategories: {}", self.categories.join(", ")).bright_black()
         )
     }
 }
@@ -57,7 +56,7 @@ impl<'a> Word<'a> {
     pub fn get_pos(&self) -> Option<&'a PartOfSpeech> {
         self._psos?.parts.iter().find(|&pos| pos.name == self.pos)
     }
-    pub fn ipa(&self, ortho: &Orthography) -> String {
+    pub fn ipa(&self, ortho: &Orthography) -> IpaString {
         conlang_to_ipa(self.spelling.to_owned(), ortho)
     }
 
@@ -66,65 +65,74 @@ impl<'a> Word<'a> {
         &self,
         conjugations: IndexMap<String, Either<bool, String>>,
         ortho: &Orthography,
-    ) -> ResultAnyError<(ConlangString, IpaString)> {
+    ) -> Result<(ConlangString, IpaString)> {
         let mut spelling: ConlangString = self.spelling.to_owned();
         let mut ipa: IpaString = self.ipa(ortho);
-        self._psos.ok_or("No parts of speech loaded")?;
+        let psos = self
+            ._psos
+            .ok_or_else(|| eyre!("No parts of speech loaded"))?;
         for (conj_name, dim_name) in conjugations {
             let conj = self
                 .get_pos()
-                .ok_or(format!(
-                    "No part of speech named {}\n{}",
-                    self.pos,
-                    Yellow.paint(format!(
-                        "Valid parts of speech: {}",
-                        self._psos
-                            .unwrap()
-                            .parts
-                            .iter()
-                            .map(|p| p.name.to_owned())
-                            .collect::<Vec<_>>()
-                            .join(", ")
-                    ))
-                ))?
+                .ok_or_else(|| {
+                    eyre!(
+                        "No part of speech named {}\n{}",
+                        self.pos,
+                        format!(
+                            "Valid parts of speech: {}",
+                            psos.parts
+                                .iter()
+                                .map(|p| p.name.to_owned())
+                                .collect::<Vec<_>>()
+                                .join(", ")
+                        )
+                        .yellow()
+                    )
+                })?
                 .conjugations
                 .iter()
                 .find(|c| c.name == conj_name)
-                .ok_or(format!(
-                    "No conjugation named {}\n{}",
-                    conj_name,
-                    Yellow.paint(format!(
-                        "Valid conjugations: {}",
-                        self.get_pos()
-                            .unwrap()
-                            .conjugations
-                            .iter()
-                            .map(|c| c.name.to_string())
-                            .collect::<Vec<_>>()
-                            .join("\n")
-                    ))
-                ))?;
+                .ok_or_else(|| {
+                    eyre!(
+                        "No conjugation named {}\n{}",
+                        conj_name,
+                        format!(
+                            "Valid conjugations: {}",
+                            self.get_pos()
+                                .unwrap()
+                                .conjugations
+                                .iter()
+                                .map(|c| c.name.to_string())
+                                .collect::<Vec<_>>()
+                                .join("\n")
+                        )
+                        .yellow()
+                    )
+                })?;
             let dim = if let Either::Right(dim_name) = dim_name {
                 conj.dimensions
                     .iter()
                     .find(|d| d.name == dim_name)
-                    .ok_or(format!(
-                        "No dimension named {}\n{}",
-                        dim_name,
-                        Yellow.paint(format!(
-                            "Valid dimensions: {}",
-                            conj.dimensions
-                                .iter()
-                                .map(|d| d.name.to_string())
-                                .collect::<Vec<_>>()
-                                .join("\n")
-                        ))
-                    ))?
+                    .ok_or_else(|| {
+                        eyre!(
+                            "No dimension named {}\n{}",
+                            dim_name,
+                            format!(
+                                "Valid dimensions: {}",
+                                conj.dimensions
+                                    .iter()
+                                    .map(|d| d.name.to_string())
+                                    .collect::<Vec<_>>()
+                                    .join("\n")
+                            )
+                            .yellow()
+                        )
+                    })?
             } else if let Either::Left(changed) = dim_name {
                 conj.dimensions
                     .iter()
                     .find(|d| d.original_form != changed)
-                    .ok_or("No default dimension")?
+                    .ok_or_else(|| eyre!("No default dimension"))?
             } else {
                 unreachable!()
             };
@@ -143,9 +151,9 @@ impl<'a> Word<'a> {
                     .unwrap_or_else(|| conlang_to_ipa(rule.spelling_subst.to_owned(), ortho));
                 if spelling_regex.is_match(&spelling) {
                     spelling = spelling_regex
-                        .replace_all(&spelling, spelling_subst)
-                        .to_string();
-                    ipa = ipa_regex.replace_all(&ipa, ipa_subst).to_string();
+                        .replace_all(&spelling, spelling_subst.as_str())
+                        .into();
+                    ipa = ipa_regex.replace_all(&ipa, ipa_subst.as_str()).into();
                 }
             }
         }
@@ -171,7 +179,7 @@ impl Display for Lexicon<'_> {
     }
 }
 impl<'a> Lexicon<'a> {
-    pub fn from_folder(path: PathBuf, psos: &'a PartsOfSpeech) -> ResultAnyError<Self> {
+    pub fn from_folder(path: PathBuf, psos: &'a PartsOfSpeech) -> Result<Self> {
         let mut lexicons: Vec<Lexicon> = vec![];
         for path in fs::read_dir(path)? {
             let path = path?.path();
@@ -179,10 +187,13 @@ impl<'a> Lexicon<'a> {
             file_data.words.iter_mut().try_for_each(|w| {
                 w._psos = Some(psos);
                 if let Some(stem) = path.file_stem() {
-                    w.categories
-                        .push(stem.to_str().ok_or("Invalid unicode")?.to_owned());
+                    w.categories.push(
+                        stem.to_str()
+                            .ok_or_else(|| eyre!("Invalid unicode"))?
+                            .to_owned(),
+                    );
                 }
-                Result::<(), Box<dyn Error>>::Ok(())
+                Result::<_, Report>::Ok(())
             })?;
             lexicons.push(file_data);
         }
@@ -194,7 +205,7 @@ impl<'a> Lexicon<'a> {
             })
             .unwrap_or_default())
     }
-    pub fn from_lang_folder(lang_folder: &Path, psos: &'a PartsOfSpeech) -> ResultAnyError<Self> {
+    pub fn from_lang_folder(lang_folder: &Path, psos: &'a PartsOfSpeech) -> Result<Self> {
         let file = lang_folder.join("lexicon");
         Lexicon::from_folder(file, psos)
     }
@@ -205,7 +216,7 @@ pub struct LexiconOptions {
     search: Option<String>,
 }
 impl CliOptions for LexiconOptions {
-    fn run(&self, lang_folder: PathBuf) -> ResultAnyError<()> {
+    fn run(&self, lang_folder: PathBuf) -> Result<()> {
         let psos = PartsOfSpeech::from_lang_folder(&lang_folder)?;
         let mut lexicon = Lexicon::from_lang_folder(&lang_folder, &psos)?;
         if let Some(query) = &self.search {
@@ -227,7 +238,7 @@ pub struct ConjugationOptions {
     conjugations: Vec<String>,
 }
 impl CliOptions for ConjugationOptions {
-    fn run(&self, lang_folder: PathBuf) -> ResultAnyError<()> {
+    fn run(&self, lang_folder: PathBuf) -> Result<()> {
         let psos = PartsOfSpeech::from_lang_folder(&lang_folder)?;
         let ortho = Orthography::from_lang_folder(&lang_folder)?;
         let lexicon = Lexicon::from_lang_folder(&lang_folder, &psos)?;
@@ -239,39 +250,43 @@ impl CliOptions for ConjugationOptions {
                     .word
                     .split(':')
                     .nth(1)
-                    .ok_or(CUSTOM_WORD_ERROR)?
-                    .to_owned(),
+                    .ok_or_else(|| eyre!("{CUSTOM_WORD_ERROR}"))?
+                    .into(),
                 pos: self
                     .word
                     .split(':')
                     .next()
-                    .ok_or(CUSTOM_WORD_ERROR)?
+                    .ok_or_else(|| eyre!("{CUSTOM_WORD_ERROR}"))?
                     .to_owned(),
                 _psos: Some(&psos),
                 ..Default::default()
             }
         };
         if !psos.parts.iter().any(|p| p.name == word.pos) {
-            return Err(format!(
+            return Err(eyre!(
                 "No part of speech named {}\n{}",
                 word.pos,
-                Yellow.paint(format!(
+                format!(
                     "Valid parts of speech: {}",
                     psos.parts
                         .iter()
                         .map(|p| p.name.to_owned())
                         .collect::<Vec<_>>()
                         .join(", ")
-                ))
-            )
-            .into());
+                )
+                .yellow()
+            ));
         }
 
         let conjugations = self
             .conjugations
             .iter()
             .map(|c| {
-                let conj_name = c.split(':').next().ok_or(CONJ_ERROR)?.to_owned();
+                let conj_name = c
+                    .split(':')
+                    .next()
+                    .ok_or_else(|| eyre!("{CONJ_ERROR}"))?
+                    .to_owned();
                 let dim_name = if let Some(dim) = c.split(':').nth(1) {
                     Either::Right(dim.to_owned())
                 } else {
@@ -279,9 +294,9 @@ impl CliOptions for ConjugationOptions {
                 };
                 Ok((conj_name, dim_name))
             })
-            .collect::<ResultAnyError<IndexMap<_, _>>>()?;
+            .collect::<Result<IndexMap<_, _>>>()?;
         let (spelling, ipa) = word.conjugate(conjugations, &ortho)?;
-        println!("{}\n{}", spelling, White.dimmed().paint(ipa));
+        println!("{}\n{}", spelling, ipa.bright_black());
         Ok(())
     }
 }

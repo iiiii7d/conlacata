@@ -140,10 +140,9 @@
 
 use std::path::PathBuf;
 
-use ansi_term::Color::Red;
 use clap::Parser;
-
-use crate::types::ResultAnyError;
+use color_eyre::Result;
+use owo_colors::OwoColorize;
 
 mod modules;
 mod types;
@@ -155,9 +154,6 @@ struct Args {
     lang_folder: PathBuf,
     #[clap(subcommand)]
     subcmd: Subcmd,
-    /// Enables debugging info
-    #[clap(short, long, parse(from_occurrences))]
-    verbose: u8,
 }
 
 #[derive(Parser)]
@@ -179,7 +175,7 @@ enum Subcmd {
 }
 
 pub trait CliOptions {
-    fn run(&self, lang_folder: PathBuf) -> ResultAnyError<()>;
+    fn run(&self, lang_folder: PathBuf) -> Result<()>;
 }
 
 fn main() {
@@ -192,6 +188,6 @@ fn main() {
         Subcmd::Conjugation(v) => v.run(args.lang_folder),
     }
     .unwrap_or_else(|e| {
-        eprintln!("{}", Red.paint(e.to_string()));
+        eprintln!("{}", e.red());
     });
 }

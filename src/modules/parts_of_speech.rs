@@ -3,12 +3,13 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use ansi_term::Color::{Green, White, Yellow};
 use clap::Parser;
+use color_eyre::Result;
+use owo_colors::OwoColorize;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    types::{ConlangString, IpaString, ResultAnyError},
+    types::{ConlangString, IpaString},
     CliOptions,
 };
 
@@ -31,9 +32,9 @@ impl Display for Rule {
             if let (Some(ipa_regex), Some(ipa_subst)) =
                 (self.ipa_regex.to_owned(), self.ipa_subst.to_owned())
             {
-                White
-                    .dimmed()
-                    .paint(format!(" ({ipa_regex} \u{2192} {ipa_subst})"))
+                format!(" ({ipa_regex} \u{2192} {ipa_subst})")
+                    .bright_black()
+                    .to_string()
             } else {
                 "".into()
             }
@@ -56,13 +57,13 @@ impl Display for Dimension {
         write!(
             f,
             "{}{} {}{}{}",
-            Yellow.bold().paint(self.name.to_owned()),
+            self.name.yellow().bold(),
             if self.original_form {
-                Green.paint(" (original)")
+                " (original)".green().to_string()
             } else {
                 "".into()
             },
-            White.dimmed().paint(self.description.to_owned()),
+            self.description.bright_black(),
             if self.rules.is_empty() { "" } else { "\n" },
             self.rules
                 .iter()
@@ -88,13 +89,13 @@ impl Display for Conjugation {
         write!(
             f,
             "{}{} {}\n{}",
-            Yellow.bold().paint(self.name.to_owned()),
+            self.name.yellow().bold(),
             if self.multi_dimensional {
-                Green.paint(" (multi-dimensional)")
+                " (multi-dimensional)".green().to_string()
             } else {
                 "".into()
             },
-            White.dimmed().paint(self.description.to_owned()),
+            self.description.bright_black(),
             self.dimensions
                 .iter()
                 .map(|d| d
@@ -123,9 +124,9 @@ impl Display for PartOfSpeech {
         write!(
             f,
             "{} ({}) {}\n{}",
-            Yellow.bold().paint(self.name.to_owned()),
+            self.name.yellow().bold(),
             self.abbrev.to_owned(),
-            White.dimmed().paint(self.description.to_owned()),
+            self.description.bright_black(),
             self.conjugations
                 .iter()
                 .map(|c| c
@@ -158,11 +159,11 @@ impl Display for PartsOfSpeech {
     }
 }
 impl PartsOfSpeech {
-    pub fn from_file(path: PathBuf) -> ResultAnyError<Self> {
+    pub fn from_file(path: PathBuf) -> Result<Self> {
         let content = std::fs::read_to_string(path)?;
         Ok(toml::from_str(&content)?)
     }
-    pub fn from_lang_folder(lang_folder: &Path) -> ResultAnyError<Self> {
+    pub fn from_lang_folder(lang_folder: &Path) -> Result<Self> {
         let file = lang_folder.join("parts_of_speech.toml");
         Self::from_file(file)
     }
@@ -171,7 +172,7 @@ impl PartsOfSpeech {
 #[derive(Parser)]
 pub struct PartsOfSpeechOptions;
 impl CliOptions for PartsOfSpeechOptions {
-    fn run(&self, lang_folder: PathBuf) -> ResultAnyError<()> {
+    fn run(&self, lang_folder: PathBuf) -> Result<()> {
         let data = PartsOfSpeech::from_lang_folder(&lang_folder)?;
         println!("{data}");
         Ok(())

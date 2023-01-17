@@ -1,12 +1,13 @@
 use std::path::PathBuf;
 
-use ansi_term::Color::White;
 use clap::Parser;
+use color_eyre::Result;
+use owo_colors::OwoColorize;
 use unicode_segmentation::UnicodeSegmentation;
 
 use crate::{
     modules::orthography::Orthography,
-    types::{ConlangString, IpaString, ResultAnyError},
+    types::{ConlangString, IpaString},
     CliOptions,
 };
 
@@ -24,7 +25,7 @@ pub fn conlang_to_ipa(input: ConlangString, ortho: &Orthography) -> IpaString {
                     .graphemes(true)
                     .skip(index)
                     .collect::<String>()
-                    .starts_with(form)
+                    .starts_with(form.as_str())
                 {
                     ipa += if let Some(last) = ipa.graphemes(true).last() {
                         if last == &*letter.pronunciation {
@@ -44,7 +45,7 @@ pub fn conlang_to_ipa(input: ConlangString, ortho: &Orthography) -> IpaString {
         }
         ipa += grapheme
     }
-    ipa
+    ipa.into()
 }
 
 #[derive(Parser)]
@@ -53,11 +54,11 @@ pub struct IpaOptions {
     input: ConlangString,
 }
 impl CliOptions for IpaOptions {
-    fn run(&self, lang_folder: PathBuf) -> ResultAnyError<()> {
+    fn run(&self, lang_folder: PathBuf) -> Result<()> {
         let ortho = Orthography::from_lang_folder(&lang_folder)?;
         println!(
             "{}\n[{}]",
-            White.dimmed().paint(self.input.to_owned()),
+            self.input.bright_black(),
             conlang_to_ipa(self.input.to_owned(), &ortho)
         );
         Ok(())

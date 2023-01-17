@@ -1,5 +1,4 @@
-use std::error::Error;
+use smol_str::SmolStr;
 
-pub type ConlangString = String;
-pub type IpaString = String;
-pub type ResultAnyError<T> = Result<T, Box<dyn Error>>;
+pub type ConlangString = SmolStr;
+pub type IpaString = SmolStr;

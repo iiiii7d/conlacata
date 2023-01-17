@@ -3,12 +3,13 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use ansi_term::{Color::Yellow, Style};
 use clap::Parser;
+use color_eyre::Result;
+use owo_colors::OwoColorize;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    types::{ConlangString, IpaString, ResultAnyError},
+    types::{ConlangString, IpaString},
     CliOptions,
 };
 
@@ -24,12 +25,10 @@ impl Display for Letter {
             "{}\n{}",
             self.forms
                 .iter()
-                .map(|s| Yellow.bold().paint(s).to_string())
+                .map(|s| s.yellow().bold().to_string())
                 .collect::<Vec<_>>()
                 .join(" / "),
-            Style::new()
-                .italic()
-                .paint(format!("[{}]", self.pronunciation))
+            format!("[{}]", self.pronunciation).italic()
         )
     }
 }
@@ -61,11 +60,11 @@ impl Display for Orthography {
     }
 }
 impl Orthography {
-    pub fn from_file(path: PathBuf) -> ResultAnyError<Self> {
+    pub fn from_file(path: PathBuf) -> Result<Self> {
         let content = std::fs::read_to_string(path)?;
         Ok(toml::from_str(&content)?)
     }
-    pub fn from_lang_folder(lang_folder: &Path) -> ResultAnyError<Self> {
+    pub fn from_lang_folder(lang_folder: &Path) -> Result<Self> {
         let file = lang_folder.join("orthography.toml");
         Self::from_file(file)
     }
@@ -74,7 +73,7 @@ impl Orthography {
 #[derive(Parser)]
 pub struct OrthographyOptions;
 impl CliOptions for OrthographyOptions {
-    fn run(&self, lang_folder: PathBuf) -> ResultAnyError<()> {
+    fn run(&self, lang_folder: PathBuf) -> Result<()> {
         let data = Orthography::from_lang_folder(&lang_folder)?;
         println!("{data}");
         Ok(())
