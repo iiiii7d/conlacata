@@ -1,10 +1,16 @@
-use std::fmt::Display;
-use std::path::PathBuf;
+use std::{
+    fmt::Display,
+    path::{Path, PathBuf},
+};
+
 use ansi_term::Color::{Green, White, Yellow};
-use serde::{Deserialize, Serialize};
 use clap::Parser;
-use crate::CliOptions;
-use crate::types::{ConlangString, IpaString, ResultAnyError};
+use serde::{Deserialize, Serialize};
+
+use crate::{
+    types::{ConlangString, IpaString, ResultAnyError},
+    CliOptions,
+};
 
 const RETURNS_FALSE: fn() -> bool = || false;
 
@@ -13,14 +19,21 @@ pub struct Rule {
     pub spelling_regex: ConlangString,
     pub spelling_subst: ConlangString,
     pub ipa_regex: Option<IpaString>,
-    pub ipa_subst: Option<IpaString>
+    pub ipa_subst: Option<IpaString>,
 }
 impl Display for Rule {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{} → {}{}", self.spelling_regex, self.spelling_subst,
-            if let (Some(ipa_regex), Some(ipa_subst))
-                = (self.ipa_regex.to_owned(), self.ipa_subst.to_owned()) {
-                White.dimmed().paint(format!(" ({} → {})", ipa_regex, ipa_subst))
+        write!(
+            f,
+            "{} \u{2192} {}{}",
+            self.spelling_regex,
+            self.spelling_subst,
+            if let (Some(ipa_regex), Some(ipa_subst)) =
+                (self.ipa_regex.to_owned(), self.ipa_subst.to_owned())
+            {
+                White
+                    .dimmed()
+                    .paint(format!(" ({ipa_regex} \u{2192} {ipa_subst})"))
             } else {
                 "".into()
             }
@@ -36,11 +49,13 @@ pub struct Dimension {
     #[serde(default = "RETURNS_FALSE")]
     pub original_form: bool,
     #[serde(default = "Vec::new")]
-    pub rules: Vec<Rule>
+    pub rules: Vec<Rule>,
 }
 impl Display for Dimension {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}{} {}{}{}",
+        write!(
+            f,
+            "{}{} {}{}{}",
             Yellow.bold().paint(self.name.to_owned()),
             if self.original_form {
                 Green.paint(" (original)")
@@ -48,11 +63,13 @@ impl Display for Dimension {
                 "".into()
             },
             White.dimmed().paint(self.description.to_owned()),
-            if !self.rules.is_empty() {"\n"} else {""},
-            self.rules.iter()
-                   .map(|r| r.to_string())
-                   .collect::<Vec<_>>()
-                   .join("\n"))
+            if self.rules.is_empty() { "" } else { "\n" },
+            self.rules
+                .iter()
+                .map(ToString::to_string)
+                .collect::<Vec<_>>()
+                .join("\n")
+        )
     }
 }
 
@@ -68,7 +85,9 @@ pub struct Conjugation {
 }
 impl Display for Conjugation {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}{} {}\n{}",
+        write!(
+            f,
+            "{}{} {}\n{}",
             Yellow.bold().paint(self.name.to_owned()),
             if self.multi_dimensional {
                 Green.paint(" (multi-dimensional)")
@@ -76,14 +95,17 @@ impl Display for Conjugation {
                 "".into()
             },
             White.dimmed().paint(self.description.to_owned()),
-            self.dimensions.iter()
-                   .map(|d| d.to_string()
-                       .split('\n')
-                       .map(|line| format!("\t{}", line))
-                       .collect::<Vec<_>>()
-                       .join("\n"))
-                   .collect::<Vec<_>>()
-                   .join("\n"))
+            self.dimensions
+                .iter()
+                .map(|d| d
+                    .to_string()
+                    .split('\n')
+                    .map(|line| format!("\t{line}"))
+                    .collect::<Vec<_>>()
+                    .join("\n"))
+                .collect::<Vec<_>>()
+                .join("\n")
+        )
     }
 }
 
@@ -94,35 +116,45 @@ pub struct PartOfSpeech {
     pub description: String,
     pub abbrev: String,
     #[serde(default = "Vec::new")]
-    pub conjugations: Vec<Conjugation>
+    pub conjugations: Vec<Conjugation>,
 }
 impl Display for PartOfSpeech {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{} ({}) {}\n{}",
+        write!(
+            f,
+            "{} ({}) {}\n{}",
             Yellow.bold().paint(self.name.to_owned()),
             self.abbrev.to_owned(),
             White.dimmed().paint(self.description.to_owned()),
-            self.conjugations.iter()
-                .map(|c| c.to_string()
+            self.conjugations
+                .iter()
+                .map(|c| c
+                    .to_string()
                     .split('\n')
-                    .map(|line| format!("\t{}", line))
+                    .map(|line| format!("\t{line}"))
                     .collect::<Vec<_>>()
                     .join("\n"))
                 .collect::<Vec<_>>()
-                .join("\n"))
+                .join("\n")
+        )
     }
 }
 
 #[derive(Serialize, Deserialize, Default)]
 pub struct PartsOfSpeech {
-    pub parts: Vec<PartOfSpeech>
+    pub parts: Vec<PartOfSpeech>,
 }
 impl Display for PartsOfSpeech {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", self.parts.iter()
-            .map(|p| p.to_string())
-            .collect::<Vec<_>>()
-            .join("\n"))
+        write!(
+            f,
+            "{}",
+            self.parts
+                .iter()
+                .map(ToString::to_string)
+                .collect::<Vec<_>>()
+                .join("\n")
+        )
     }
 }
 impl PartsOfSpeech {
@@ -130,9 +162,9 @@ impl PartsOfSpeech {
         let content = std::fs::read_to_string(path)?;
         Ok(toml::from_str(&content)?)
     }
-    pub fn from_lang_folder(lang_folder: PathBuf) -> ResultAnyError<Self> {
+    pub fn from_lang_folder(lang_folder: &Path) -> ResultAnyError<Self> {
         let file = lang_folder.join("parts_of_speech.toml");
-        PartsOfSpeech::from_file(file)
+        Self::from_file(file)
     }
 }
 
@@ -140,8 +172,8 @@ impl PartsOfSpeech {
 pub struct PartsOfSpeechOptions;
 impl CliOptions for PartsOfSpeechOptions {
     fn run(&self, lang_folder: PathBuf) -> ResultAnyError<()> {
-        let data = PartsOfSpeech::from_lang_folder(lang_folder)?;
-        println!("{}", data);
+        let data = PartsOfSpeech::from_lang_folder(&lang_folder)?;
+        println!("{data}");
         Ok(())
     }
 }

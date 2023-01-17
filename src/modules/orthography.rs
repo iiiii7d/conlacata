@@ -1,11 +1,16 @@
-use std::fmt::Display;
-use std::path::PathBuf;
-use ansi_term::Color::Yellow;
-use ansi_term::Style;
-use serde::{Serialize, Deserialize};
+use std::{
+    fmt::Display,
+    path::{Path, PathBuf},
+};
+
+use ansi_term::{Color::Yellow, Style};
 use clap::Parser;
-use crate::CliOptions;
-use crate::types::{ConlangString, IpaString, ResultAnyError};
+use serde::{Deserialize, Serialize};
+
+use crate::{
+    types::{ConlangString, IpaString, ResultAnyError},
+    CliOptions,
+};
 
 #[derive(Serialize, Deserialize)]
 pub struct Letter {
@@ -14,12 +19,18 @@ pub struct Letter {
 }
 impl Display for Letter {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}\n{}",
-        self.forms.iter()
-            .map(|s| Yellow.bold().paint(s).to_string())
-            .collect::<Vec<_>>()
-            .join(" / "),
-        Style::new().italic().paint(format!("[{}]", self.pronunciation)))
+        write!(
+            f,
+            "{}\n{}",
+            self.forms
+                .iter()
+                .map(|s| Yellow.bold().paint(s).to_string())
+                .collect::<Vec<_>>()
+                .join(" / "),
+            Style::new()
+                .italic()
+                .paint(format!("[{}]", self.pronunciation))
+        )
     }
 }
 #[derive(Serialize, Deserialize)]
@@ -31,17 +42,22 @@ pub struct Orthography {
 }
 impl Display for Orthography {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}",
-        self.letters.iter()
-            .map(|l| l.to_string()
-                .split('\n')
-                .map(|line| format!("\t{}", line))
+        write!(
+            f,
+            "{}",
+            self.letters
+                .iter()
+                .map(|l| l
+                    .to_string()
+                    .split('\n')
+                    .map(|line| format!("\t{line}"))
+                    .collect::<Vec<_>>()
+                    .join("\n"))
+                .enumerate()
+                .map(|(i, e)| format!("{}: {}", i + 1, e))
                 .collect::<Vec<_>>()
-                .join("\n"))
-            .enumerate()
-            .map(|(i, e)| format!("{}: {}", i+1, e))
-            .collect::<Vec<_>>()
-            .join("\n"))
+                .join("\n")
+        )
     }
 }
 impl Orthography {
@@ -49,9 +65,9 @@ impl Orthography {
         let content = std::fs::read_to_string(path)?;
         Ok(toml::from_str(&content)?)
     }
-    pub fn from_lang_folder(lang_folder: PathBuf) -> ResultAnyError<Self> {
+    pub fn from_lang_folder(lang_folder: &Path) -> ResultAnyError<Self> {
         let file = lang_folder.join("orthography.toml");
-        Orthography::from_file(file)
+        Self::from_file(file)
     }
 }
 
@@ -59,8 +75,8 @@ impl Orthography {
 pub struct OrthographyOptions;
 impl CliOptions for OrthographyOptions {
     fn run(&self, lang_folder: PathBuf) -> ResultAnyError<()> {
-        let data = Orthography::from_lang_folder(lang_folder)?;
-        println!("{}", data);
+        let data = Orthography::from_lang_folder(&lang_folder)?;
+        println!("{data}");
         Ok(())
     }
 }
